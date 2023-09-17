@@ -1,2 +1,2 @@
 # ludo-game-client
-A real time multiplayer ludo game by Gbotemi
+A real time online multiplayer ludo game by Gbotemi
