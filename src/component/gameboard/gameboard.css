@@ -1,0 +1,293 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    background-color: orange;
+    gap: 5px;
+}
+
+.gameboard {
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    height: 650px;
+    border: 2px solid green;
+}
+
+.column {
+    width: 100%;
+    height: 26%;
+    display: flex;
+}
+
+.column1,
+.column3 {
+    height: 39%;
+}
+
+
+.green-box,
+.red-box,
+.yellow-box,
+.blue-box {
+    width: 39%;
+    height: 100%;
+}
+
+.road-btw-box {
+    width: 39%;
+    height: 100%;
+    background-color: white;
+}
+
+.road {
+    width: 22%;
+    height: 100%;
+    background-color: white;
+}
+
+.green-box {
+    background-color: rgb(14, 192, 14);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+}
+
+.green-box>div {
+    height: 40px;
+    width: 40px;
+    background-color: green;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+
+.red-box {
+    background-color: rgb(251, 45, 45);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+}
+
+.red-box>div {
+    height: 40px;
+    width: 40px;
+    background-color: red;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+
+.yellow-box {
+    background-color: rgba(52, 52, 37, 0.647);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+}
+
+.yellow-box>div {
+    height: 40px;
+    width: 40px;
+    background-color: yellow;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.blue-box {
+    background-color: rgb(44, 44, 254);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+}
+
+.blue-box>div {
+    height: 40px;
+    width: 40px;
+    background-color: blue;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.vertical-road {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.vertical-road>div {
+    border: 1px solid black;
+}
+
+.horizontal-road {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.horizontal-road>div {
+    border: 1px solid black;
+}
+
+.dice-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* yellow path */
+.yellow-road>div:nth-child(5),
+.yellow-road>div:nth-child(6),
+.yellow-road>div:nth-child(8),
+.yellow-road>div:nth-child(11),
+.yellow-road>div:nth-child(14),
+.yellow-road>div:nth-child(17) {
+    background-color: yellow;
+}
+
+/* green path*/
+.green-road>div:nth-child(2),
+.green-road>div:nth-child(8),
+.green-road>div:nth-child(9),
+.green-road>div:nth-child(10),
+.green-road>div:nth-child(11),
+.green-road>div:nth-child(12) {
+    background-color: green;
+}
+
+/* blue path */
+.blue-road>div:nth-child(7),
+.blue-road>div:nth-child(8),
+.blue-road>div:nth-child(9),
+.blue-road>div:nth-child(10),
+.blue-road>div:nth-child(11),
+.blue-road>div:nth-child(17) {
+    background-color: blue;
+}
+
+/* red path */
+.red-road>div:nth-child(2),
+.red-road>div:nth-child(5),
+.red-road>div:nth-child(8),
+.red-road>div:nth-child(11),
+.red-road>div:nth-child(13),
+.red-road>div:nth-child(14) {
+    background-color: red;
+}
+
+/* btns styling */
+
+.button-container {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-blue {
+    background: #108fe8;
+    border: 3px solid #fff;
+    border-radius: 100%;
+    box-shadow: 0 -2px 0 3px #0d72b8 inset, 0 5px 5px rgba(3, 25, 41, 0.17), 0 15px rgba(255, 255, 255, 0.25) inset;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75px;
+    width: 75px;
+    text-align: center;
+}
+
+.btn-blue:hover {
+    background: #333333;
+    box-shadow: 0 -2px 0 3px #1a1a1a inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 15px rgba(255, 255, 255, 0.32) inset;
+}
+
+.btn-red {
+    background: #e53030;
+    border: 3px solid #fff;
+    border-radius: 100%;
+    box-shadow: 0 -2px 0 3px #c91919 inset, 0 5px 5px rgba(65, 8, 8, 0.17), 0 15px rgba(255, 255, 255, 0.25) inset;
+    cursor: pointer;
+    display: inline-block;
+    height: 75px;
+    width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-red:hover {
+    background: #333333;
+    box-shadow: 0 -2px 0 3px #1a1a1a inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 15px rgba(255, 255, 255, 0.32) inset;
+}
+
+.btn-green {
+    background: #0ec518;
+    border: 3px solid #fff;
+    border-radius: 100%;
+    box-shadow: 0 -2px 0 3px #0b9512 inset, 0 5px 5px rgba(0, 7, 1, 0.17), 0 15px rgba(255, 255, 255, 0.25) inset;
+    cursor: pointer;
+    display: inline-block;
+    height: 75px;
+    width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-green:hover {
+    background: #333333;
+    box-shadow: 0 -2px 0 3px #1a1a1a inset, 0 5px 5px rgba(0, 0, 0, 0.17), 0 15px rgba(255, 255, 255, 0.32) inset;
+}
+
+.ludo-content1,.ludo-content2,.ludo-content3 {
+    font-size: 30px;
+    font-weight: 500;
+    color: white;
+}
+
+.red-road>div,
+.blue-road>div,
+.green-road>div,
+.yellow-road>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.red-road>div>div,
+.blue-road>div>div,
+.green-road>div>div,
+.yellow-road>div>div {
+    height: 33px;
+    width: 33px;
+    border-radius: 50%;
+    background-color: red;
+    border: 2px solid white;
+    opacity: 0;
+    /* display: none; */
+}
+
+/* .red-box>div {
+    animation: glow 0.5s infinite alternate;
+} */
+.active {
+    animation: glow 0.5s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px -10px #aef4af;
+    }
+
+    to {
+        box-shadow: 0 0 10px 10px #aef4af;
+    }
+}
