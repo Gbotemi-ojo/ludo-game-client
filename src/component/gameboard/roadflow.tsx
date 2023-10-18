@@ -230,4 +230,4 @@ const greenRoad: string[] = [
   "g11",
   "g12",
 ];
-export default { redRoad,blueRoad,greenRoad,yellowRoad }
+export default { redRoad, blueRoad, greenRoad, yellowRoad };
