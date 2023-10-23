@@ -16,7 +16,7 @@ function Gameboard() {
     className: "die_1 die",
   });
   const [dieRolling1, setdieRolling1] = useState(false);
-  const handleDie1 = () => {
+  const handleDie1 = (): void => {
     if (dieRolling1) {
       return;
     }
@@ -90,11 +90,7 @@ function Gameboard() {
       blueRoadMap.push(`b${i}`);
     }
   };
-  function validatePlayerMove() {
-    if (currentPlayer === "playerOne") {
-      for (let i = 0; i <= seeds.position.length - 1; i++) {}
-    }
-  }
+
   function isPlayer1Valid() {
     const redSeed1Coordinate = redSeed1.position;
     const redSeed2Coordinate = redSeed2.position;
@@ -163,151 +159,157 @@ function Gameboard() {
   });
 
   // function to click both die at the same time;
-  const handleDice = () => {
+  function handleDice(): void {
     setGameStarted(true);
     if (gameStarted && button3Value > 0) {
       return;
     }
     handleDie1();
     handleDie2();
-  };
+  }
 
-  const [seeds, setSeeds] = useState({
-    colors: ["red", "yellow", "blue", "green"],
-    position: [
-      "r0",
-      "r0",
-      "r0",
-      "r0",
-      "y0",
-      "y0",
-      "y0",
-      "y0",
-      "b0",
-      "b0",
-      "b0",
-      "b0",
-      "g0",
-      "g0",
-      "g0",
-      "g0",
-    ],
-    onRoad: [false, false],
-  });
-  const initialCoordinates = [
-    "ra",
-    "rb",
-    "rc",
-    "rd",
-    "ya",
-    "yb",
-    "yc",
-    "yd",
-    "ba",
-    "bb",
-    "bc",
-    "bd",
-    "ga",
-    "gb",
-    "gc",
-    "gd",
-  ];
   const [redSeed1, setRedSeed1] = useState({
     display: "none",
     color: "red",
-    position: "ra",
+    position: "r0",
     onRoad: false,
   });
   const [redSeed2, setRedSeed2] = useState({
     display: "none",
     color: "red",
-    position: "rb",
+    position: "r0",
     onRoad: false,
   });
   const [redSeed3, setRedSeed3] = useState({
     display: "none",
     color: "red",
-    position: "rc",
+    position: "r0",
     onRoad: false,
   });
   const [redSeed4, setRedSeed4] = useState({
     display: "none",
     color: "red",
-    position: "rd",
+    position: "r0",
     onRoad: false,
   });
   const [blueSeed1, setBlueSeed1] = useState({
     display: "flex",
     color: "blue",
-    position: "ba",
+    position: "b0",
     onRoad: false,
   });
   const [blueSeed2, setBlueSeed2] = useState({
     display: "flex",
     color: "blue",
-    position: "bb",
+    position: "b0",
     onRoad: false,
   });
   const [blueSeed3, setBlueSeed3] = useState({
     display: "flex",
     color: "blue",
-    position: "bc",
+    position: "b0",
     onRoad: false,
   });
   const [blueSeed4, setBlueSeed4] = useState({
     display: "flex",
     color: "blue",
-    position: "bd",
+    position: "b0",
     onRoad: false,
   });
   const [greenSeed1, setGreenSeed1] = useState({
     display: "flex",
     color: "green",
-    position: "ga",
+    position: "g0",
     onRoad: false,
   });
   const [greenSeed2, setGreenSeed2] = useState({
     display: "flex",
     color: "green",
-    position: "gb",
+    position: "g0",
     onRoad: false,
   });
   const [greenSeed3, setGreenSeed3] = useState({
     display: "flex",
     color: "green",
-    position: "gc",
+    position: "g0",
     onRoad: false,
   });
   const [greenSeed4, setGreenSeed4] = useState({
     display: "flex",
     color: "green",
-    position: "gd",
+    position: "g0",
     onRoad: false,
   });
   const [yellowSeed1, setYellowSeed1] = useState({
     display: "flex",
     color: "yellow",
-    position: "ya",
+    position: "y0",
     onRoad: false,
   });
   const [yellowSeed2, setYellowSeed2] = useState({
     display: "flex",
     color: "yellow",
-    position: "yb",
+    position: "y0",
     onRoad: false,
   });
   const [yellowSeed3, setYellowSeed3] = useState({
     display: "flex",
     color: "yellow",
-    position: "yc",
+    position: "y0",
     onRoad: false,
   });
   const [yellowSeed4, setYellowSeed4] = useState({
     display: "flex",
     color: "yellow",
-    position: "yd",
+    position: "y0",
     onRoad: false,
   });
+  function chopSeed() {
+    const seedPositions = [
+      redSeed1.position,
+      redSeed2.position,
+      redSeed3.position,
+      redSeed4.position,
+      yellowSeed1.position,
+      yellowSeed2.position,
+      yellowSeed3.position,
+      yellowSeed4.position,
+      blueSeed1.position,
+      blueSeed2.position,
+      blueSeed3.position,
+      blueSeed4.position,
+      greenSeed1.position,
+      greenSeed2.position,
+      greenSeed3.position,
+      greenSeed4.position,
+    ];
+    const player1SeedsId = [
+      "red-seed-1",
+      "red-seed-2",
+      "red-seed-3",
+      "red-seed-4",
+      "yellow-seed-1",
+      "yellow-seed-2",
+      "yellow-seed-3",
+      "yellow-seed-4",
+    ];
+    const player2SeedsId = [
+      "blue-seed-1",
+      "blue-seed-2",
+      "blue-seed-3",
+      "blue-seed-4",
+      "green-seed-1",
+      "green-seed-2",
+      "green-seed-3",
+      "green-seed-4",
+    ];
+    const repeatedItems = findRepeatedItems(seedPositions)[0];
+    let player1Index = repeatedItems.indexes[0];
+    let player2Index = repeatedItems.indexes[1];
+    if (currentPlayer === "playerOne" && player1Index) {
+
+    }
+  }
   function findRepeatedItems(
     arr: string[]
   ): { item: string; count: number; indexes: number[] }[] {
@@ -364,7 +366,9 @@ function Gameboard() {
     }
     for (let i = 0; i <= repeatedElement.length - 1; i++) {
       const repeated = document.getElementById(repeatedElement[i].item);
-      repeated.textContent = repeatedElement[i].count;
+      if (repeated !== null) {
+        repeated.textContent = repeatedElement[i].count.toString();
+      }
     }
   }
   function reRenderSeeds() {
@@ -388,7 +392,22 @@ function Gameboard() {
     ];
     for (let i = 0; i <= allSeedCoordinates.length - 1; i++) {
       const seeds = document.getElementById(allSeedCoordinates[i]);
-      seeds.style.opacity = "1";
+      if (seeds !== null) {
+        seeds.style.opacity = "1";
+        seeds.textContent = "";
+      }
+    }
+    for (let i = 0; i < allSeedCoordinates.length - 1; i++) {
+      const seeds = document.getElementById(allSeedCoordinates[i]);
+      if (i < 3) {
+        if (seeds !== null) seeds.style.background = "red";
+      } else if (i > 3 && i < 8) {
+        if (seeds !== null) seeds.style.background = "yellow";
+      } else if (i > 7 && i < 12) {
+        if (seeds !== null) seeds.style.background = "blue";
+      } else if (i > 11 && i < 16) {
+        if (seeds !== null) seeds.style.background = "green";
+      }
     }
   }
 
@@ -396,55 +415,12 @@ function Gameboard() {
     countPlayerSeeds();
     reRenderSeeds();
     countPlayerSeeds();
-  }, [
-    redSeed1.position,
-    redSeed2.position,
-    redSeed3.position,
-    redSeed4.position,
-    yellowSeed1.position,
-    yellowSeed2.position,
-    yellowSeed3.position,
-    yellowSeed4.position,
-    blueSeed1.position,
-    blueSeed2.position,
-    blueSeed3.position,
-    blueSeed4.position,
-    greenSeed1.position,
-    greenSeed2.position,
-    greenSeed3.position,
-    greenSeed4.position,
-  ]);
-    useEffect(() => {
-      countPlayerSeeds();
-      reRenderSeeds();
-      countPlayerSeeds();
-    }, [
-      redSeed1.position,
-      redSeed2.position,
-      redSeed3.position,
-      redSeed4.position,
-      yellowSeed1.position,
-      yellowSeed2.position,
-      yellowSeed3.position,
-      yellowSeed4.position,
-      blueSeed1.position,
-      blueSeed2.position,
-      blueSeed3.position,
-      blueSeed4.position,
-      greenSeed1.position,
-      greenSeed2.position,
-      greenSeed3.position,
-      greenSeed4.position,
-    ]);
+  });
 
-  const seedCoordinates: string[] = ["a", "b", "c", "a", "d", "e", "b"];
+  const seedCoordinates: string[] = ["a", "k", "c", "a", "d", "e", "b", "a"];
   const repeatedItems = findRepeatedItems(seedCoordinates);
 
   console.log(repeatedItems);
-
-  const handleSeeds = (e) => {
-    const seedId = e.target.id;
-  };
 
   const handleRedSeed1 = () => {
     if (currentButton.value !== 6) {
@@ -463,7 +439,7 @@ function Gameboard() {
       onRoad: true,
     });
     const redSeed1 = document.getElementById("red-seed-1");
-    redSeed1.style.opacity = "0";
+    if (redSeed1 !== null) redSeed1.style.opacity = "0";
     resetButtons();
   };
 
@@ -484,7 +460,7 @@ function Gameboard() {
       onRoad: true,
     });
     const redSeed2 = document.getElementById("red-seed-2");
-    redSeed2.style.opacity = "0";
+    if (redSeed2 !== null) redSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleRedSeed3 = () => {
@@ -504,7 +480,7 @@ function Gameboard() {
       onRoad: true,
     });
     const redSeed3 = document.getElementById("red-seed-3");
-    redSeed3.style.opacity = "0";
+    if (redSeed3 !== null) redSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleRedSeed4 = () => {
@@ -524,7 +500,7 @@ function Gameboard() {
       onRoad: true,
     });
     const redSeed4 = document.getElementById("red-seed-4");
-    redSeed4.style.opacity = "0";
+    if (redSeed4 !== null) redSeed4.style.opacity = "0";
     resetButtons();
   };
 
@@ -545,7 +521,7 @@ function Gameboard() {
       onRoad: true,
     });
     const yellowSeed1 = document.getElementById("yellow-seed-1");
-    yellowSeed1.style.opacity = "0";
+    if (yellowSeed1 !== null) yellowSeed1.style.opacity = "0";
     resetButtons();
   };
 
@@ -566,7 +542,7 @@ function Gameboard() {
       onRoad: true,
     });
     const yellowSeed2 = document.getElementById("yellow-seed-2");
-    yellowSeed2.style.opacity = "0";
+    if (yellowSeed2 !== null) yellowSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleYellowSeed3 = () => {
@@ -586,7 +562,7 @@ function Gameboard() {
       onRoad: true,
     });
     const yellowSeed3 = document.getElementById("yellow-seed-3");
-    yellowSeed3.style.opacity = "0";
+    if (yellowSeed3 !== null) yellowSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleYellowSeed4 = () => {
@@ -606,7 +582,7 @@ function Gameboard() {
       onRoad: true,
     });
     const yellowSeed4 = document.getElementById("yellow-seed-4");
-    yellowSeed4.style.opacity = "0";
+    if (yellowSeed4 !== null) yellowSeed4.style.opacity = "0";
     resetButtons();
   };
 
@@ -627,7 +603,7 @@ function Gameboard() {
       onRoad: true,
     });
     const blueSeed1 = document.getElementById("blue-seed-1");
-    blueSeed1.style.opacity = "0";
+    if (blueSeed1 !== null) blueSeed1.style.opacity = "0";
     resetButtons();
   };
   const handleBlueSeed2 = () => {
@@ -647,7 +623,7 @@ function Gameboard() {
       onRoad: true,
     });
     const blueSeed2 = document.getElementById("blue-seed-2");
-    blueSeed2.style.opacity = "0";
+    if (blueSeed2 !== null) blueSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleBlueSeed3 = () => {
@@ -667,7 +643,7 @@ function Gameboard() {
       onRoad: true,
     });
     const blueSeed3 = document.getElementById("blue-seed-3");
-    blueSeed3.style.opacity = "0";
+    if (blueSeed3 !== null) blueSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleBlueSeed4 = () => {
@@ -687,7 +663,7 @@ function Gameboard() {
       onRoad: true,
     });
     const blueSeed4 = document.getElementById("blue-seed-4");
-    blueSeed4.style.opacity = "0";
+    if (blueSeed4 !== null) blueSeed4.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed1 = () => {
@@ -707,7 +683,7 @@ function Gameboard() {
       onRoad: true,
     });
     const greenSeed1 = document.getElementById("green-seed-1");
-    greenSeed1.style.opacity = "0";
+    if (greenSeed1 !== null) greenSeed1.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed2 = () => {
@@ -727,7 +703,7 @@ function Gameboard() {
       onRoad: true,
     });
     const greenSeed2 = document.getElementById("green-seed-2");
-    greenSeed2.style.opacity = "0";
+    if (greenSeed2 !== null) greenSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed3 = () => {
@@ -747,7 +723,7 @@ function Gameboard() {
       onRoad: true,
     });
     const greenSeed3 = document.getElementById("green-seed-3");
-    greenSeed3.style.opacity = "0";
+    if (greenSeed3 !== null) greenSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed4 = () => {
@@ -767,7 +743,7 @@ function Gameboard() {
       onRoad: true,
     });
     const greenSeed4 = document.getElementById("green-seed-4");
-    greenSeed4.style.opacity = "0";
+    if (greenSeed4 !== null) greenSeed4.style.opacity = "0";
     resetButtons();
   };
   useEffect(() => {
@@ -836,29 +812,37 @@ function Gameboard() {
   useEffect(() => {
     if (redSeed1.onRoad) {
       const seed = document.getElementById(redSeed1.position);
-      seed.style.opacity = "1";
-      seed.style.background = "red";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "red";
+      }
     }
   }, [redSeed1.position]);
   useEffect(() => {
     if (redSeed2.onRoad) {
       const seed = document.getElementById(redSeed2.position);
-      seed.style.opacity = "1";
-      seed.style.background = "red";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "red";
+      }
     }
   }, [redSeed2.position]);
   useEffect(() => {
     if (redSeed3.onRoad) {
       const seed = document.getElementById(redSeed3.position);
-      seed.style.opacity = "1";
-      seed.style.background = "red";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "red";
+      }
     }
   }, [redSeed3.position]);
   useEffect(() => {
     if (redSeed4.onRoad) {
       const seed = document.getElementById(redSeed4.position);
-      seed.style.opacity = "1";
-      seed.style.background = "red";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "red";
+      }
     }
   }, [redSeed4.position]);
 
@@ -866,87 +850,111 @@ function Gameboard() {
   useEffect(() => {
     if (blueSeed1.onRoad) {
       const seed = document.getElementById(blueSeed1.position);
-      seed.style.opacity = "1";
-      seed.style.background = "blue";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "blue";
+      }
     }
   }, [blueSeed1.position]);
   useEffect(() => {
     if (blueSeed2.onRoad) {
       const seed = document.getElementById(blueSeed2.position);
-      seed.style.opacity = "1";
-      seed.style.background = "blue";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "blue";
+      }
     }
   }, [blueSeed2.position]);
   useEffect(() => {
     if (blueSeed3.onRoad) {
       const seed = document.getElementById(blueSeed3.position);
-      seed.style.opacity = "1";
-      seed.style.background = "blue";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "blue";
+      }
     }
   }, [blueSeed3.position]);
   useEffect(() => {
     if (blueSeed4.onRoad) {
       const seed = document.getElementById(blueSeed4.position);
-      seed.style.opacity = "1";
-      seed.style.background = "blue";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "blue";
+      }
     }
   }, [blueSeed4.position]);
   // useEffect for greenseed1 to greenseed 4
   useEffect(() => {
     if (greenSeed1.onRoad) {
       const seed = document.getElementById(greenSeed1.position);
-      seed.style.opacity = "1";
-      seed.style.background = "green";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "green";
+      }
     }
   }, [greenSeed1.position]);
   useEffect(() => {
     if (greenSeed2.onRoad) {
       const seed = document.getElementById(greenSeed2.position);
-      seed.style.opacity = "1";
-      seed.style.background = "green";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "green";
+      }
     }
   }, [greenSeed2.position]);
   useEffect(() => {
     if (greenSeed3.onRoad) {
       const seed = document.getElementById(greenSeed3.position);
-      seed.style.opacity = "1";
-      seed.style.background = "green";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "green";
+      }
     }
   }, [greenSeed3.position]);
   useEffect(() => {
     if (greenSeed4.onRoad) {
       const seed = document.getElementById(greenSeed4.position);
-      seed.style.opacity = "1";
-      seed.style.background = "green";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "green";
+      }
     }
   }, [greenSeed4.position]);
   //  useEffect for yellowseed1 to yellowseed4
   useEffect(() => {
     if (yellowSeed1.onRoad) {
       const seed = document.getElementById(yellowSeed1.position);
-      seed.style.opacity = "1";
-      seed.style.background = "yellow";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "yellow";
+      }
     }
   }, [yellowSeed1.position]);
   useEffect(() => {
     if (yellowSeed2.onRoad) {
       const seed = document.getElementById(yellowSeed2.position);
-      seed.style.opacity = "1";
-      seed.style.background = "yellow";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "yellow";
+      }
     }
   }, [yellowSeed2.position]);
   useEffect(() => {
     if (yellowSeed3.onRoad) {
       const seed = document.getElementById(yellowSeed3.position);
-      seed.style.opacity = "1";
-      seed.style.background = "yellow";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "yellow";
+      }
     }
   }, [yellowSeed3.position]);
   useEffect(() => {
     if (yellowSeed4.onRoad) {
       const seed = document.getElementById(yellowSeed4.position);
-      seed.style.opacity = "1";
-      seed.style.background = "yellow";
+      if (seed !== null) {
+        seed.style.opacity = "1";
+        seed.style.background = "yellow";
+      }
     }
   }, [yellowSeed4.position]);
 
@@ -1024,54 +1032,8 @@ function Gameboard() {
       });
     }
   }, [currentButton.type]);
-  function moveSeed(e) {
-    if (currentButton.value === 0) {
-      return;
-    }
-    // get coordinates of all seeds
-    const allSeedCoordinates = [redSeed1.position, blueSeed1.position];
-    console.log(allSeedCoordinates);
-    const id = e.target.id;
-    const currentSeedIndex = allSeedCoordinates.indexOf(id);
-    let playerSeed = "";
-    if (currentSeedIndex === 0) {
-      playerSeed = "red";
-    } else if (currentSeedIndex === 1) {
-      playerSeed = "blue";
-    }
-    if (playerSeed === "red" && currentPlayer === "playerTwo") {
-      return;
-    } else if (playerSeed === "blue" && currentPlayer === "playerOne") {
-      return;
-    }
-    if (currentPlayer === "playerOne" && playerSeed === "red") {
-      const previousPosition = roadflow.redRoad.indexOf(redSeed1.position);
-      const destroyPreviousSeed = document.getElementById(
-        roadflow.redRoad[previousPosition]
-      );
-      destroyPreviousSeed.style.opacity = "0";
-      setRedSeed1({
-        display: "flex",
-        color: "red",
-        position: roadflow.redRoad[previousPosition + currentButton.value],
-        onRoad: true,
-      });
-    } else if (currentPlayer === "playerTwo" && playerSeed === "blue") {
-      const previousPosition = roadflow.blueRoad.indexOf(blueSeed1.position);
-      const destroyPreviousSeed = document.getElementById(
-        roadflow.blueRoad[previousPosition]
-      );
-      destroyPreviousSeed.style.opacity = "0";
-      setBlueSeed1({
-        display: "flex",
-        color: "red",
-        position: roadflow.blueRoad[previousPosition + currentButton.value],
-        onRoad: true,
-      });
-    }
-    resetButtons();
-  }
-  function moveSeed2(e) {
+
+  function moveSeed2(e: any) {
     if (currentButton.value === 0) {
       return;
     }
@@ -1109,8 +1071,8 @@ function Gameboard() {
         playerSeed = "green";
       }
     }
-    const playerOne = playerSeed === "red" || playerSeed === "yellow";
-    const playerTwo = playerSeed === "blue" || playerSeed === "green";
+    // const playerOne = playerSeed === "red" || playerSeed === "yellow";
+    // const playerTwo = playerSeed === "blue" || playerSeed === "green";
     if (playerSeed === "red" && currentPlayer === "playerTwo") {
       return;
     } else if (playerSeed === "blue" && currentPlayer === "playerOne") {
@@ -1145,12 +1107,11 @@ function Gameboard() {
       playerSeed === "red" &&
       id === roadflow.redRoad[redseed1pos]
     ) {
-      console.log(`id = ${id} position = ${redseed1pos}`);
       const previousPosition = roadflow.redRoad.indexOf(redSeed1.position);
       const destroyPreviousSeed = document.getElementById(
         roadflow.redRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setRedSeed1({
         display: "flex",
         color: "red",
@@ -1166,7 +1127,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.redRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setRedSeed2({
         display: "flex",
         color: "red",
@@ -1182,7 +1143,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.redRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setRedSeed3({
         display: "flex",
         color: "red",
@@ -1198,7 +1159,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.redRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setRedSeed4({
         display: "flex",
         color: "red",
@@ -1216,7 +1177,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.yellowRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setYellowSeed1({
         display: "flex",
         color: "yellow",
@@ -1234,7 +1195,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.yellowRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setYellowSeed2({
         display: "flex",
         color: "yellow",
@@ -1252,7 +1213,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.yellowRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setYellowSeed3({
         display: "flex",
         color: "yellow",
@@ -1270,7 +1231,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.yellowRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setYellowSeed4({
         display: "flex",
         color: "yellow",
@@ -1286,7 +1247,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.blueRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setBlueSeed1({
         display: "flex",
         color: "yellow",
@@ -1302,7 +1263,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.blueRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setBlueSeed2({
         display: "flex",
         color: "blue",
@@ -1318,7 +1279,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.blueRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setBlueSeed3({
         display: "flex",
         color: "blue",
@@ -1334,7 +1295,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.blueRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setBlueSeed4({
         display: "flex",
         color: "blue",
@@ -1350,7 +1311,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.greenRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setGreenSeed1({
         display: "flex",
         color: "green",
@@ -1366,7 +1327,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.greenRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setGreenSeed2({
         display: "flex",
         color: "green",
@@ -1382,7 +1343,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.greenRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setGreenSeed3({
         display: "flex",
         color: "green",
@@ -1398,7 +1359,7 @@ function Gameboard() {
       const destroyPreviousSeed = document.getElementById(
         roadflow.greenRoad[previousPosition]
       );
-      destroyPreviousSeed.style.opacity = "0";
+      if (destroyPreviousSeed !== null) destroyPreviousSeed.style.opacity = "0";
       setGreenSeed4({
         display: "flex",
         color: "green",
@@ -1513,9 +1474,6 @@ function Gameboard() {
           <div className="ludo-content3">{button1Value + button2Value}</div>
         </span>
       </div>
-      {initialCoordinates.map((item) => {
-        return <div id={item}></div>;
-      })}
     </section>
   );
 }
