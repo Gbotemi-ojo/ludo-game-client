@@ -203,6 +203,7 @@ body {
   text-align: center;
 }
 
+
 .btn-blue:hover {
   background: #333333;
   box-shadow: 0 -2px 0 3px #1a1a1a inset, 0 5px 5px rgba(0, 0, 0, 0.17),
@@ -292,6 +293,11 @@ body {
 } */
 .active {
   animation: glow 0.5s infinite alternate;
+}
+.inactive{
+  background-color:  grey;
+  opacity: 0.5;
+  box-shadow: none;
 }
 
 @keyframes glow {

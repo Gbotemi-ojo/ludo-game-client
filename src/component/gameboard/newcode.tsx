@@ -89,7 +89,7 @@ function Gameboard() {
       blueRoadMap.push(`b${i}`);
     }
   };
-  function validatePlayerMove() {
+  function validatePlayerMove(): boolean {
     let validity: boolean = false;
     if (currentPlayer === "playerOne") {
       for (let i = 0; i < 4; i++) {
@@ -105,13 +105,10 @@ function Gameboard() {
       for (let i = 0; i < 4; i++) {
         if (roadflow.blueRoad.includes(seeds[i + 8].position)) {
           validity = true;
-          return;
         } else if (roadflow.greenRoad.includes(seeds[i + 12].position)) {
           validity = true;
-          return;
         } else {
           validity = false;
-          return;
         }
       }
     }
