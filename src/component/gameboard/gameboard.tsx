@@ -5,6 +5,13 @@ import Dice from "../dice/dice";
 import roadflow from "./roadflow";
 
 function Gameboard() {
+  // The seed doesnt enter properly (i.e any number makes it win);
+  // The current player doesnt update properly when one player wins;
+  // when player gets 6-6, The current Player should play again;
+  // The user shouldnt be able to summon a seed that is on the road (opacity been zero is causing the bug)
+  // There should be a final winner
+  // Sound and effects
+  // N:B for the vs computer, directly alter the state instead of simulating a button;
   const [clicked, setClicked] = useState("");
   const button3AutoClick = useRef(null);
   const moveSeedRef = useRef(null);
@@ -300,21 +307,8 @@ function Gameboard() {
 
     return result;
   }
-  const seedCoordinates: string[] = [
-    "a",
-    "k",
-    "c",
-    "a",
-    "d",
-    "e",
-    "b",
-    "a",
-    "c",
-  ];
-  const repeatedItems = findRepeatedItems(seedCoordinates);
 
   function countPlayerSeeds() {
-    let playerWon = "";
     const allSeedCoordinates = [
       seeds[0].position,
       seeds[1].position,
@@ -339,13 +333,11 @@ function Gameboard() {
       return;
     }
 
-    console.log(repeatedItems);
     for (let i = 0; i <= repeatedElement.length - 1; i++) {
       const players = getPlayerFromRepeatedArray(
         repeatedElement[i].indexes[0],
         repeatedElement[i].indexes[1]
       );
-      console.log(players);
       if (players[0] === players[1]) {
         const repeated = document.getElementById(repeatedElement[i].item);
         if (repeated !== null) {
@@ -356,24 +348,41 @@ function Gameboard() {
           const playerOneIndex = repeatedElement[i].indexes[0];
           const playerTwoIndex = repeatedElement[i].indexes[1];
           const elem = document.getElementById(seeds[playerTwoIndex].id);
-          const two = seeds[playerTwoIndex].position;
-          alert(two)
-          const elemPreviousPosition = document.getElementById(seeds[playerTwoIndex].position);
-          elem.style.opacity = '1';
-          
-          updateSeed(playerOneIndex, false, 'won');
-          updateSeed(playerTwoIndex, false, 'home');
-          
+          const player2 = seeds[playerTwoIndex].position;
+          clearPlayerSeeds(player2);
+          if(elem !==null)
+          elem.style.opacity = "1";
+          updateSeed(playerTwoIndex, false, "home");
+          updateSeed(playerOneIndex, false, "won");
+          // bug!!!!
+          // When playerOne won, it didnt switch to playerTwo;
           // repeatedItem[0].item is constantly playerOne
           // repeatedItem[0].index setState seeds [repeatedItem0]
-          // 
-          playerWon = "player1";
+          //
         } else if (currentPlayer === "playerTwo") {
-          playerWon = "player2";
+          const playerOneIndex = repeatedElement[i].indexes[0];
+          const playerTwoIndex = repeatedElement[i].indexes[1];
+          const elem = document.getElementById(seeds[playerOneIndex].id);
+          const player1 = seeds[playerTwoIndex].position;
+          clearPlayerSeeds(player1);
+          if (elem !== null)
+          elem.style.opacity = "1";
+          updateSeed(playerOneIndex, false, "home");
+          updateSeed(playerTwoIndex, false, "won");
         }
       }
     }
-    return playerWon;
+  }
+  function clearPlayerSeeds(id: string) {
+    const elem = document.getElementById(id);
+    for (let i = 0; i <= 20; i++) {
+      if(elem !==null)
+      elem.style.opacity = "0";
+    }
+    setTimeout(() => {
+      if(elem !==null)
+      elem.style.opacity = "0";
+    }, 50);
   }
   // let demo = [0, 7];
   // console.log(getPlayerFromRepeatedArray(1, 10));
