@@ -18,10 +18,11 @@ function Gameboard() {
   const moveSeedRef = useRef(null);
   const getRandomNumber = (): number => {
     const randomNumber = Math.floor(Math.random() * 6 + 1);
-    return 1;
+    return 6;
     return randomNumber;
   };
   const [winningSeed, setwinningSeed] = useState(false);
+
   const [dieValue1, setDieValue1] = useState({
     num: 1,
     className: "die_1 die",
@@ -80,6 +81,14 @@ function Gameboard() {
   const [button1Value, setButton1Value] = useState(dieValue1.num);
   const [button2Value, setButton2Value] = useState(dieValue2.num);
   const [button3Value, setButton3Value] = useState(button1Value + button2Value);
+
+  const [currentPlayerHadDoubleSix, setcurrentPlayerHadDoubleSix] =
+    useState(false);
+  useEffect(() => {
+    if (button1Value === 6 && button2Value === 6) {
+      setcurrentPlayerHadDoubleSix(true);
+    }
+  }, [button1Value, button2Value]);
   const updateButton3Value = () => {
     setButton3Value(button1Value + button2Value);
   };
@@ -125,6 +134,7 @@ function Gameboard() {
     }
     handleDie1();
     handleDie2();
+    setcurrentPlayerHadDoubleSix(false);
   }
   const [player1Seeds, setplayer1Seeds] = useState([
     {
@@ -409,7 +419,6 @@ function Gameboard() {
 
     return result;
   }
-  const [elem2Go, setelem2Go] = useState("");
   function countPlayerSeeds() {
     const allSeedCoordinates = [
       player1Seeds[0].position,
@@ -458,7 +467,6 @@ function Gameboard() {
             repeatedElement[i].indexes[repeatedElement[i].indexes.length - 1] -
             8;
           const player2 = player2Seeds[playerTwoIndex].position;
-          setelem2Go(player2);
           clearPlayerSeeds(player2);
           updatePlayer1Seed(playerOneIndex, false, "won");
           updatePlayer2Seed(playerTwoIndex, false, "home");
@@ -469,7 +477,6 @@ function Gameboard() {
             repeatedElement[i].indexes[repeatedElement[i].indexes.length - 1] -
             8;
           const player1 = player1Seeds[playerTwoIndex].position;
-          setelem2Go(player1);
           clearPlayerSeeds(player1);
           updatePlayer1Seed(playerOneIndex, false, "home");
           updatePlayer2Seed(playerTwoIndex, false, "won");
@@ -485,7 +492,7 @@ function Gameboard() {
     }
     setTimeout(() => {
       if (elem !== null) elem.style.opacity = "0";
-    }, 5000);
+    }, 1000);
   }
   // let demo = [0, 7];
   // console.log(getPlayerFromRepeatedArray(1, 10));
@@ -702,6 +709,10 @@ function Gameboard() {
   // updated HandleSeed
 
   const handleRedSeed1 = () => {
+    const seed = document.getElementById(player1Seeds[0].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -731,6 +742,10 @@ function Gameboard() {
   };
 
   const handleRedSeed2 = () => {
+    const seed = document.getElementById(player1Seeds[1].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -759,6 +774,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleRedSeed3 = () => {
+    const seed = document.getElementById(player1Seeds[2].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -787,6 +806,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleRedSeed4 = () => {
+    const seed = document.getElementById(player1Seeds[3].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -816,6 +839,10 @@ function Gameboard() {
   };
 
   const handleYellowSeed1 = () => {
+    const seed = document.getElementById(player1Seeds[4].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -845,6 +872,10 @@ function Gameboard() {
   };
 
   const handleYellowSeed2 = () => {
+    const seed = document.getElementById(player1Seeds[5].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -873,6 +904,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleYellowSeed3 = () => {
+    const seed = document.getElementById(player1Seeds[6].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -901,6 +936,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleYellowSeed4 = () => {
+    const seed = document.getElementById(player1Seeds[7].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -930,6 +969,10 @@ function Gameboard() {
   };
 
   const handleBlueSeed1 = () => {
+    const seed = document.getElementById(player2Seeds[0].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -959,6 +1002,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleBlueSeed2 = () => {
+    const seed = document.getElementById(player2Seeds[1].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -987,6 +1034,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleBlueSeed3 = () => {
+    const seed = document.getElementById(player2Seeds[2].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -1015,6 +1066,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleBlueSeed4 = () => {
+    const seed = document.getElementById(player2Seeds[3].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -1043,6 +1098,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleGreenSeed1 = () => {
+    const seed = document.getElementById(player2Seeds[4].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -1071,6 +1130,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleGreenSeed2 = () => {
+    const seed = document.getElementById(player2Seeds[5].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -1099,6 +1162,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleGreenSeed3 = () => {
+    const seed = document.getElementById(player2Seeds[6].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -1128,6 +1195,10 @@ function Gameboard() {
     resetButtons();
   };
   const handleGreenSeed4 = () => {
+    const seed = document.getElementById(player2Seeds[7].id);
+    if (seed !== null && seed.style.opacity === "0") {
+      return;
+    }
     if (currentButton.value !== 6) {
       return;
     }
@@ -1158,6 +1229,9 @@ function Gameboard() {
   };
   useEffect(() => {
     if (winningSeed === true) {
+      return;
+    }
+    if (currentPlayerHadDoubleSix) {
       return;
     }
     const isValid = isPlayer1Valid();
@@ -1745,13 +1819,24 @@ function Gameboard() {
           }
         }
       }
-      // This counts the playerSeeds
+      // This counts the playerSeeds1;
       for (let i = 0; i <= player1Seeds.length - 1; i++) {
         let num = 0;
-        for (let j = 0; j <= player2Seeds.length - 1; j++) {
+        for (let j = 0; j <= player1Seeds.length - 1; j++) {
           if (player1Seeds[i].position === player1Seeds[j].position) {
             let elem = document.getElementById(player1Seeds[i].position);
-            num++
+            num++;
+            if (elem !== null) elem.textContent = num.toString();
+          }
+        }
+      }
+      // This counts playerSeeds2;
+      for (let i = 0; i <= player2Seeds.length - 1; i++) {
+        let num = 0;
+        for (let j = 0; j <= player2Seeds.length - 1; j++) {
+          if (player2Seeds[i].position === player2Seeds[j].position) {
+            let elem = document.getElementById(player2Seeds[i].position);
+            num++;
             if (elem !== null) elem.textContent = num.toString();
           }
         }
@@ -1766,7 +1851,7 @@ function Gameboard() {
         }
       }
     }
-  },[player1Seeds,player2Seeds]);
+  }, [player1Seeds, player2Seeds]);
 
   return (
     <section className="container">
