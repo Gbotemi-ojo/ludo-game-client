@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import "./gameboard.css";
 import Dice from "../dice/dice";
 import roadflow from "./roadflow";
@@ -21,7 +21,7 @@ function Gameboard() {
     return 1;
     return randomNumber;
   };
-
+  const [winningSeed, setwinningSeed] = useState(false);
   const [dieValue1, setDieValue1] = useState({
     num: 1,
     className: "die_1 die",
@@ -129,49 +129,49 @@ function Gameboard() {
   const [player1Seeds, setplayer1Seeds] = useState([
     {
       id: "red-seed-1",
-      position: "r-one",
+      position: "home",
       color: "red",
       onroad: false,
     },
     {
       id: "red-seed-2",
-      position: "r-two",
+      position: "home",
       color: "red",
       onroad: false,
     },
     {
       id: "red-seed-3",
-      position: "r-three",
+      position: "home",
       color: "red",
       onroad: false,
     },
     {
       id: "red-seed-4",
-      position: "r-four",
+      position: "home",
       color: "red",
       onroad: false,
     },
     {
       id: "yellow-seed-1",
-      position: "y-one",
+      position: "home",
       color: "yellow",
       onroad: false,
     },
     {
       id: "yellow-seed-2",
-      position: "y-two",
+      position: "home",
       color: "yellow",
       onroad: false,
     },
     {
       id: "yellow-seed-3",
-      position: "y-three",
+      position: "home",
       color: "yellow",
       onroad: false,
     },
     {
       id: "yellow-seed-4",
-      position: "y-four",
+      position: "home",
       color: "yellow",
       onroad: false,
     },
@@ -180,49 +180,49 @@ function Gameboard() {
   const [player2Seeds, setplayer2Seeds] = useState([
     {
       id: "blue-seed-1",
-      position: "b-one",
+      position: "home",
       color: "blue",
       onroad: false,
     },
     {
       id: "blue-seed-2",
-      position: "b-two",
+      position: "home",
       color: "blue",
       onroad: false,
     },
     {
       id: "blue-seed-3",
-      position: "b-three",
+      position: "home",
       color: "blue",
       onroad: false,
     },
     {
       id: "blue-seed-4",
-      position: "b-four",
+      position: "home",
       color: "blue",
       onroad: false,
     },
     {
       id: "green-seed-1",
-      position: "g-one",
+      position: "home",
       color: "green",
       onroad: false,
     },
     {
       id: "green-seed-2",
-      position: "g-two",
+      position: "home",
       color: "green",
       onroad: false,
     },
     {
       id: "green-seed-3",
-      position: "g-three",
+      position: "home",
       color: "green",
       onroad: false,
     },
     {
       id: "green-seed-4",
-      position: "g-four",
+      position: "home",
       color: "green",
       onroad: false,
     },
@@ -409,7 +409,7 @@ function Gameboard() {
 
     return result;
   }
-
+  const [elem2Go, setelem2Go] = useState("");
   function countPlayerSeeds() {
     const allSeedCoordinates = [
       player1Seeds[0].position,
@@ -445,26 +445,31 @@ function Gameboard() {
         repeatedElement[i].indexes[repeatedElement[i].indexes.length - 1]
       );
       if (players[0] === players[1]) {
-        const repeated = document.getElementById(repeatedElement[i].item);
-        if (repeated !== null) {
-          repeated.textContent = repeatedElement[i].count.toString();
-        }
+        // const repeated = document.getElementById(repeatedElement[i].item);
+        // if (repeated !== null) {
+        //   repeated.textContent = repeatedElement[i].count.toString();
+        // }
+        return;
       } else {
         if (currentPlayer === "playerOne") {
+          setwinningSeed(true);
           const playerOneIndex = repeatedElement[i].indexes[0];
           const playerTwoIndex =
             repeatedElement[i].indexes[repeatedElement[i].indexes.length - 1] -
             8;
           const player2 = player2Seeds[playerTwoIndex].position;
+          setelem2Go(player2);
           clearPlayerSeeds(player2);
           updatePlayer1Seed(playerOneIndex, false, "won");
           updatePlayer2Seed(playerTwoIndex, false, "home");
         } else if (currentPlayer === "playerTwo") {
+          setwinningSeed(true);
           const playerOneIndex = repeatedElement[i].indexes[0];
           const playerTwoIndex =
             repeatedElement[i].indexes[repeatedElement[i].indexes.length - 1] -
             8;
           const player1 = player1Seeds[playerTwoIndex].position;
+          setelem2Go(player1);
           clearPlayerSeeds(player1);
           updatePlayer1Seed(playerOneIndex, false, "home");
           updatePlayer2Seed(playerTwoIndex, false, "won");
@@ -472,6 +477,7 @@ function Gameboard() {
       }
     }
   }
+
   function clearPlayerSeeds(id: string) {
     const elem = document.getElementById(id);
     for (let i = 0; i <= 20; i++) {
@@ -479,7 +485,7 @@ function Gameboard() {
     }
     setTimeout(() => {
       if (elem !== null) elem.style.opacity = "0";
-    }, 50);
+    }, 5000);
   }
   // let demo = [0, 7];
   // console.log(getPlayerFromRepeatedArray(1, 10));
@@ -590,76 +596,76 @@ function Gameboard() {
   //   autoPlay()
   // }, [currentButton.value,button1Value,button2Value]);
 
-  function reRenderSeeds() {
-    const allSeedCoordinates = [
-      player1Seeds[0].position,
-      player1Seeds[1].position,
-      player1Seeds[2].position,
-      player1Seeds[3].position,
-      player1Seeds[4].position,
-      player1Seeds[5].position,
-      player1Seeds[6].position,
-      player1Seeds[7].position,
-      player2Seeds[0].position,
-      player2Seeds[1].position,
-      player2Seeds[2].position,
-      player2Seeds[3].position,
-      player2Seeds[4].position,
-      player2Seeds[5].position,
-      player2Seeds[6].position,
-      player2Seeds[7].position,
-    ];
-    for (let i = 0; i <= allSeedCoordinates.length - 1; i++) {
-      const seeds = document.getElementById(allSeedCoordinates[i]);
-      if (seeds !== null) {
-        seeds.style.opacity = "1";
-        seeds.textContent = "";
-      }
-    }
-    for (let i = 0; i <= player1Seeds.length - 1; i++) {
-      if (player1Seeds[i].position === "won") {
-        let seed = document.getElementById(player1Seeds[i].id);
-        if (seed !== null) {
-          seed.style.opacity = "0";
-        }
-      } else if (player1Seeds[i].position === "home") {
-        let seed = document.getElementById(player1Seeds[i].id);
-        if (seed !== null) {
-          seed.style.opacity = "1";
-        }
-      }
-      if (player2Seeds[i].position === "won") {
-        let seed = document.getElementById(player2Seeds[i].id);
-        if (seed !== null) {
-          seed.style.opacity = "0";
-        }
-      } else if (player2Seeds[i].position === "home") {
-        let seed = document.getElementById(player2Seeds[i].id);
-        if (seed !== null) {
-          seed.style.opacity = "1";
-        }
-      }
-    }
-    for (let i = 0; i < allSeedCoordinates.length - 1; i++) {
-      const seeds = document.getElementById(allSeedCoordinates[i]);
-      if (
-        i < 3 &&
-        (allSeedCoordinates[i] !== "won" || allSeedCoordinates[i] !== "home")
-      ) {
-        if (seeds !== null) seeds.style.background = "red";
-      } else if (i > 3 && i < 8) {
-        if (seeds !== null) seeds.style.background = "yellow";
-      } else if (i > 7 && i < 12) {
-        if (seeds !== null) seeds.style.background = "blue";
-      } else if (i > 11 && i < 16) {
-        if (seeds !== null) seeds.style.background = "green";
-      }
-    }
-  }
+  // function reRenderSeeds() {
+  //   const allSeedCoordinates = [
+  //     player1Seeds[0].position,
+  //     player1Seeds[1].position,
+  //     player1Seeds[2].position,
+  //     player1Seeds[3].position,
+  //     player1Seeds[4].position,
+  //     player1Seeds[5].position,
+  //     player1Seeds[6].position,
+  //     player1Seeds[7].position,
+  //     player2Seeds[0].position,
+  //     player2Seeds[1].position,
+  //     player2Seeds[2].position,
+  //     player2Seeds[3].position,
+  //     player2Seeds[4].position,
+  //     player2Seeds[5].position,
+  //     player2Seeds[6].position,
+  //     player2Seeds[7].position,
+  //   ];
+  //   for (let i = 0; i <= allSeedCoordinates.length - 1; i++) {
+  //     const seeds = document.getElementById(allSeedCoordinates[i]);
+  //     if (seeds !== null) {
+  //       seeds.style.opacity = "1";
+  //       seeds.textContent = "";
+  //     }
+  //   }
+  //   for (let i = 0; i <= player1Seeds.length - 1; i++) {
+  //     if (player1Seeds[i].position === "won") {
+  //       let seed = document.getElementById(player1Seeds[i].id);
+  //       if (seed !== null) {
+  //         seed.style.opacity = "0";
+  //       }
+  //     } else if (player1Seeds[i].position === "home") {
+  //       let seed = document.getElementById(player1Seeds[i].id);
+  //       if (seed !== null) {
+  //         seed.style.opacity = "1";
+  //       }
+  //     }
+  //     if (player2Seeds[i].position === "won") {
+  //       let seed = document.getElementById(player2Seeds[i].id);
+  //       if (seed !== null) {
+  //         seed.style.opacity = "0";
+  //       }
+  //     } else if (player2Seeds[i].position === "home") {
+  //       let seed = document.getElementById(player2Seeds[i].id);
+  //       if (seed !== null) {
+  //         seed.style.opacity = "1";
+  //       }
+  //     }
+  //   }
+  //   for (let i = 0; i < allSeedCoordinates.length - 1; i++) {
+  //     const seeds = document.getElementById(allSeedCoordinates[i]);
+  //     if (
+  //       i < 3 &&
+  //       (allSeedCoordinates[i] !== "won" || allSeedCoordinates[i] !== "home")
+  //     ) {
+  //       if (seeds !== null) seeds.style.background = "red";
+  //     } else if (i > 3 && i < 8) {
+  //       if (seeds !== null) seeds.style.background = "yellow";
+  //     } else if (i > 7 && i < 12) {
+  //       if (seeds !== null) seeds.style.background = "blue";
+  //     } else if (i > 11 && i < 16) {
+  //       if (seeds !== null) seeds.style.background = "green";
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     countPlayerSeeds();
-    reRenderSeeds();
+    // reRenderSeeds();
     countPlayerSeeds();
   }, [player1Seeds, player2Seeds]);
   function updatePlayer1Seed(
@@ -719,8 +725,8 @@ function Gameboard() {
         updatePlayer1Seed(0, true, roadflow.redRoad[0]);
       }
     }
-    const redSeed1 = document.getElementById("red-seed-1");
-    if (redSeed1 !== null) redSeed1.style.opacity = "0";
+    // const redSeed1 = document.getElementById("red-seed-1");
+    // if (redSeed1 !== null) redSeed1.style.opacity = "0";
     resetButtons();
   };
 
@@ -748,8 +754,8 @@ function Gameboard() {
         updatePlayer1Seed(1, true, roadflow.redRoad[0]);
       }
     }
-    const redSeed2 = document.getElementById("red-seed-2");
-    if (redSeed2 !== null) redSeed2.style.opacity = "0";
+    // const redSeed2 = document.getElementById("red-seed-2");
+    // if (redSeed2 !== null) redSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleRedSeed3 = () => {
@@ -776,8 +782,8 @@ function Gameboard() {
         updatePlayer1Seed(2, true, roadflow.redRoad[0]);
       }
     }
-    const redSeed3 = document.getElementById("red-seed-3");
-    if (redSeed3 !== null) redSeed3.style.opacity = "0";
+    // const redSeed3 = document.getElementById("red-seed-3");
+    // if (redSeed3 !== null) redSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleRedSeed4 = () => {
@@ -804,8 +810,8 @@ function Gameboard() {
         updatePlayer1Seed(3, true, roadflow.redRoad[0]);
       }
     }
-    const redSeed4 = document.getElementById("red-seed-4");
-    if (redSeed4 !== null) redSeed4.style.opacity = "0";
+    // const redSeed4 = document.getElementById("red-seed-4");
+    // if (redSeed4 !== null) redSeed4.style.opacity = "0";
     resetButtons();
   };
 
@@ -833,8 +839,8 @@ function Gameboard() {
         updatePlayer1Seed(4, true, roadflow.yellowRoad[0]);
       }
     }
-    const yellowSeed1 = document.getElementById("yellow-seed-1");
-    if (yellowSeed1 !== null) yellowSeed1.style.opacity = "0";
+    // const yellowSeed1 = document.getElementById("yellow-seed-1");
+    // if (yellowSeed1 !== null) yellowSeed1.style.opacity = "0";
     resetButtons();
   };
 
@@ -862,8 +868,8 @@ function Gameboard() {
         updatePlayer1Seed(5, true, roadflow.yellowRoad[0]);
       }
     }
-    const yellowSeed2 = document.getElementById("yellow-seed-2");
-    if (yellowSeed2 !== null) yellowSeed2.style.opacity = "0";
+    // const yellowSeed2 = document.getElementById("yellow-seed-2");
+    // if (yellowSeed2 !== null) yellowSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleYellowSeed3 = () => {
@@ -890,8 +896,8 @@ function Gameboard() {
         updatePlayer1Seed(6, true, roadflow.yellowRoad[0]);
       }
     }
-    const yellowSeed3 = document.getElementById("yellow-seed-3");
-    if (yellowSeed3 !== null) yellowSeed3.style.opacity = "0";
+    // const yellowSeed3 = document.getElementById("yellow-seed-3");
+    // if (yellowSeed3 !== null) yellowSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleYellowSeed4 = () => {
@@ -918,8 +924,8 @@ function Gameboard() {
         updatePlayer1Seed(7, true, roadflow.yellowRoad[0]);
       }
     }
-    const yellowSeed4 = document.getElementById("yellow-seed-4");
-    if (yellowSeed4 !== null) yellowSeed4.style.opacity = "0";
+    // const yellowSeed4 = document.getElementById("yellow-seed-4");
+    // if (yellowSeed4 !== null) yellowSeed4.style.opacity = "0";
     resetButtons();
   };
 
@@ -948,8 +954,8 @@ function Gameboard() {
         updatePlayer2Seed(0, true, roadflow.blueRoad[0]);
       }
     }
-    const blueSeed1 = document.getElementById("blue-seed-1");
-    if (blueSeed1 !== null) blueSeed1.style.opacity = "0";
+    // const blueSeed1 = document.getElementById("blue-seed-1");
+    // if (blueSeed1 !== null) blueSeed1.style.opacity = "0";
     resetButtons();
   };
   const handleBlueSeed2 = () => {
@@ -976,8 +982,8 @@ function Gameboard() {
         updatePlayer2Seed(1, true, roadflow.blueRoad[0]);
       }
     }
-    const blueSeed2 = document.getElementById("blue-seed-2");
-    if (blueSeed2 !== null) blueSeed2.style.opacity = "0";
+    // const blueSeed2 = document.getElementById("blue-seed-2");
+    // if (blueSeed2 !== null) blueSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleBlueSeed3 = () => {
@@ -1004,8 +1010,8 @@ function Gameboard() {
         updatePlayer2Seed(2, true, roadflow.blueRoad[0]);
       }
     }
-    const blueSeed3 = document.getElementById("blue-seed-3");
-    if (blueSeed3 !== null) blueSeed3.style.opacity = "0";
+    // const blueSeed3 = document.getElementById("blue-seed-3");
+    // if (blueSeed3 !== null) blueSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleBlueSeed4 = () => {
@@ -1032,8 +1038,8 @@ function Gameboard() {
         updatePlayer2Seed(3, true, roadflow.blueRoad[0]);
       }
     }
-    const blueSeed4 = document.getElementById("blue-seed-4");
-    if (blueSeed4 !== null) blueSeed4.style.opacity = "0";
+    // const blueSeed4 = document.getElementById("blue-seed-4");
+    // if (blueSeed4 !== null) blueSeed4.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed1 = () => {
@@ -1060,8 +1066,8 @@ function Gameboard() {
         updatePlayer2Seed(4, true, roadflow.greenRoad[0]);
       }
     }
-    const greenSeed1 = document.getElementById("green-seed-1");
-    if (greenSeed1 !== null) greenSeed1.style.opacity = "0";
+    // const greenSeed1 = document.getElementById("green-seed-1");
+    // if (greenSeed1 !== null) greenSeed1.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed2 = () => {
@@ -1088,8 +1094,8 @@ function Gameboard() {
         updatePlayer2Seed(5, true, roadflow.greenRoad[0]);
       }
     }
-    const greenSeed2 = document.getElementById("green-seed-2");
-    if (greenSeed2 !== null) greenSeed2.style.opacity = "0";
+    // const greenSeed2 = document.getElementById("green-seed-2");
+    // if (greenSeed2 !== null) greenSeed2.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed3 = () => {
@@ -1117,8 +1123,8 @@ function Gameboard() {
       }
     }
 
-    const greenSeed3 = document.getElementById("green-seed-3");
-    if (greenSeed3 !== null) greenSeed3.style.opacity = "0";
+    // const greenSeed3 = document.getElementById("green-seed-3");
+    // if (greenSeed3 !== null) greenSeed3.style.opacity = "0";
     resetButtons();
   };
   const handleGreenSeed4 = () => {
@@ -1146,11 +1152,14 @@ function Gameboard() {
       }
     }
 
-    const greenSeed4 = document.getElementById("green-seed-4");
-    if (greenSeed4 !== null) greenSeed4.style.opacity = "0";
+    // const greenSeed4 = document.getElementById("green-seed-4");
+    // if (greenSeed4 !== null) greenSeed4.style.opacity = "0";
     resetButtons();
   };
   useEffect(() => {
+    if (winningSeed === true) {
+      return;
+    }
     const isValid = isPlayer1Valid();
     const validButton = button1Value === 6 || button2Value === 6;
     if (!isValid && !validButton) {
@@ -1192,23 +1201,26 @@ function Gameboard() {
         SetRefree("Player 1 Turn");
       }
     }
+    setTimeout(() => {
+      setwinningSeed(false);
+    }, 300);
   }, [clicked, player1Seeds, player2Seeds]);
 
   // updated useeffect
-  useEffect(() => {
-    for (let i = 0; i <= player1Seeds.length - 1; i++) {
-      if (player1Seeds[i].onroad) {
-        const seed1 = document.getElementById(player1Seeds[i].position);
-        const seed2 = document.getElementById(player2Seeds[i].position);
-        if (seed1 !== null && seed2 !== null) {
-          seed1.style.opacity = "1";
-          seed2.style.opacity = "1";
-          seed1.style.background = player1Seeds[i].color;
-          seed2.style.background = player2Seeds[i].color;
-        }
-      }
-    }
-  }, [player1Seeds, player2Seeds]);
+  // useEffect(() => {
+  //   for (let i = 0; i <= player1Seeds.length - 1; i++) {
+  //     if (player1Seeds[i].onroad) {
+  //       const seed1 = document.getElementById(player1Seeds[i].position);
+  //       const seed2 = document.getElementById(player2Seeds[i].position);
+  //       if (seed1 !== null && seed2 !== null) {
+  //         seed1.style.opacity = "1";
+  //         seed2.style.opacity = "1";
+  //         seed1.style.background = player1Seeds[i].color;
+  //         seed2.style.background = player2Seeds[i].color;
+  //       }
+  //     }
+  //   }
+  // }, [player1Seeds, player2Seeds]);
 
   function resetButtons() {
     if (currentButton.type === "button1") {
@@ -1645,6 +1657,117 @@ function Gameboard() {
     }
     resetButtons();
   }
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      // player1 home
+      for (let i = 0; i <= player1Seeds.length - 1; i++) {
+        if (player1Seeds[i].position === "home") {
+          let player1Seed = document.getElementById(player1Seeds[i].id);
+          if (player1Seed !== null) {
+            player1Seed.style.opacity = "1";
+          }
+        } else if (player1Seeds[i].position === "won") {
+          let player1Seed = document.getElementById(player1Seeds[i].id);
+          if (player1Seed !== null) {
+            player1Seed.style.opacity = "0";
+          }
+        } else {
+          let player1Seed = document.getElementById(player1Seeds[i].id);
+          if (player1Seed !== null) {
+            player1Seed.style.opacity = "0";
+          }
+        }
+      }
+      // player2 home
+      for (let i = 0; i <= player2Seeds.length - 1; i++) {
+        if (player2Seeds[i].position === "home") {
+          let player2Seed = document.getElementById(player2Seeds[i].id);
+          if (player2Seed !== null) {
+            player2Seed.style.opacity = "1";
+          }
+        } else if (player2Seeds[i].position === "won") {
+          let player2Seed = document.getElementById(player2Seeds[i].id);
+          if (player2Seed !== null) {
+            player2Seed.style.opacity = "0";
+          }
+        } else {
+          let player2Seed = document.getElementById(player2Seeds[i].id);
+          if (player2Seed !== null) {
+            player2Seed.style.opacity = "0";
+          }
+        }
+      }
+
+      // player1 On the road
+      for (let i = 0; i <= player1Seeds.length - 1; i++) {
+        if (
+          player1Seeds[i].position !== "home" ||
+          player1Seeds[i].position !== "won"
+        ) {
+          let player1SeedOnTheRoad = document.getElementById(
+            player1Seeds[i].position
+          );
+          if (player1SeedOnTheRoad !== null) {
+            player1SeedOnTheRoad.style.opacity = "1";
+            player1SeedOnTheRoad.style.backgroundColor = player1Seeds[i].color;
+          }
+        } else {
+          let player1SeedOnTheRoad = document.getElementById(
+            player1Seeds[i].position
+          );
+          if (player1SeedOnTheRoad !== null) {
+            player1SeedOnTheRoad.style.opacity = "0";
+            player1SeedOnTheRoad.style.backgroundColor = "none";
+          }
+        }
+      }
+
+      // player2 On The road
+      for (let i = 0; i <= player2Seeds.length - 1; i++) {
+        if (
+          player2Seeds[i].position !== "home" ||
+          player2Seeds[i].position !== "won"
+        ) {
+          const player2SeedOnTheRoad = document.getElementById(
+            player2Seeds[i].position
+          );
+          if (player2SeedOnTheRoad !== null) {
+            player2SeedOnTheRoad.style.opacity = "1";
+            player2SeedOnTheRoad.style.backgroundColor = player2Seeds[i].color;
+          }
+        } else {
+          const player2SeedOnTheRoad = document.getElementById(
+            player2Seeds[i].position
+          );
+          if (player2SeedOnTheRoad !== null) {
+            player2SeedOnTheRoad.style.opacity = "0";
+            player2SeedOnTheRoad.style.backgroundColor = "none";
+          }
+        }
+      }
+      // This counts the playerSeeds
+      for (let i = 0; i <= player1Seeds.length - 1; i++) {
+        let num = 0;
+        for (let j = 0; j <= player2Seeds.length - 1; j++) {
+          if (player1Seeds[i].position === player1Seeds[j].position) {
+            let elem = document.getElementById(player1Seeds[i].position);
+            num++
+            if (elem !== null) elem.textContent = num.toString();
+          }
+        }
+      }
+    }, 0);
+    for (let i = 0; i <= roadflow.redRoad.length - 1; i++) {
+      const player2Seed = document.getElementById(roadflow.redRoad[i]);
+      if (player2Seed !== null) {
+        if (player2Seed.style.opacity === "1") {
+          player2Seed.style.opacity = "0";
+          player2Seed.textContent = "";
+        }
+      }
+    }
+  },[player1Seeds,player2Seeds]);
+
   return (
     <section className="container">
       <h1>{refree}</h1>
@@ -1660,7 +1783,12 @@ function Gameboard() {
             {yellowRoadMap.map((item) => {
               return (
                 <div>
-                  <div id={item} onClick={moveSeed2} ref={moveSeedRef}></div>
+                  <div
+                    id={item}
+                    onClick={moveSeed2}
+                    ref={moveSeedRef}
+                    className="yellow"
+                  ></div>
                 </div>
               );
             })}

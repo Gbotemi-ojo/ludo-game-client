@@ -277,7 +277,7 @@ body {
   width: 33px;
   border-radius: 50%;
   border: 2px solid black;
-  opacity: 0;
+  opacity: 0 ;
   color: white;
   text-align: center;
   vertical-align: middle;
@@ -309,3 +309,17 @@ body {
     box-shadow: 0 0 10px 10px #aef4af;
   }
 }
+/* clean off all seeds */
+.red-box > div{
+  opacity:  0;
+}
+.green-box > div{
+  opacity: 0;
+}
+.yellow-box > div{
+  opacity: 0;
+}
+.blue-box > div{
+  opacity: 0;
+}
+
