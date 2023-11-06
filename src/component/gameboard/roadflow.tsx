@@ -55,6 +55,7 @@ const redRoad: string[] = [
   "r8",
   "r5",
   "r2",
+  "won"
 ];
 const blueRoad: string[] = [
   "b17",
@@ -113,6 +114,7 @@ const blueRoad: string[] = [
   "b9",
   "b8",
   "b7",
+  "won"
 ];
 const yellowRoad: string[] = [
   "y6",
@@ -171,6 +173,7 @@ const yellowRoad: string[] = [
   "y11",
   "y14",
   "y17",
+  "won"
 ];
 const greenRoad: string[] = [
   "g2",
@@ -229,5 +232,6 @@ const greenRoad: string[] = [
   "g10",
   "g11",
   "g12",
+  "won"
 ];
 export default { redRoad, blueRoad, greenRoad, yellowRoad };
