@@ -2,14 +2,18 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import "./gameboard.css";
 import Dice from "../dice/dice";
 import roadflow from "./roadflow";
-
+// set CurrentPlayer to next player if there is only 1 seed left that cant move;
 function Gameboard() {
+  function filterArray(arr1: string[], arr2: string[]) {
+    const filteredArray = arr1.filter((item) => !arr2.includes(item));
+    return filteredArray;
+  }
+
   const [clicked, setClicked] = useState("");
   const button3AutoClick = useRef(null);
   const moveSeedRef = useRef(null);
   const getRandomNumber = (): number => {
     const randomNumber = Math.floor(Math.random() * 6 + 1);
-    return 2;
     return randomNumber;
   };
   const [winningSeed, setwinningSeed] = useState(false);
@@ -19,6 +23,7 @@ function Gameboard() {
     className: "die_1 die",
   });
   const [dieRolling1, setdieRolling1] = useState(false);
+
   const handleDie1 = (): void => {
     if (dieRolling1) {
       return;
@@ -76,7 +81,7 @@ function Gameboard() {
   const [currentPlayerHadDoubleSix, setcurrentPlayerHadDoubleSix] =
     useState(false);
   useEffect(() => {
-    if (button1Value === 6 && button2Value === 6) {
+    if (dieValue1.num === 6 && dieValue2.num === 6) {
       setcurrentPlayerHadDoubleSix(true);
     }
   }, [button1Value, button2Value]);
@@ -229,7 +234,33 @@ function Gameboard() {
     },
   ]);
   console.log(player2Seeds);
+  function isPlayer2Valid() {
+    const blueSeed1Coordinate = player2Seeds[0].position;
+    const blueSeed2Coordinate = player2Seeds[1].position;
+    const blueSeed3Coordinate = player2Seeds[2].position;
+    const blueSeed4Coordinate = player2Seeds[3].position;
 
+    const greenSeed1Coordinate = player2Seeds[4].position;
+    const greenSeed2Coordinate = player2Seeds[5].position;
+    const greenSeed3Coordinate = player2Seeds[6].position;
+    const greenSeed4Coordinate = player2Seeds[7].position;
+    if (currentPlayer === "playerTwo") {
+      if (
+        roadflow.blueRoad.includes(blueSeed1Coordinate) ||
+        roadflow.blueRoad.includes(blueSeed2Coordinate) ||
+        roadflow.blueRoad.includes(blueSeed3Coordinate) ||
+        roadflow.blueRoad.includes(blueSeed4Coordinate) ||
+        roadflow.greenRoad.includes(greenSeed1Coordinate) ||
+        roadflow.greenRoad.includes(greenSeed2Coordinate) ||
+        roadflow.greenRoad.includes(greenSeed3Coordinate) ||
+        roadflow.greenRoad.includes(greenSeed4Coordinate)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
   function isPlayer1Valid() {
     const redSeed1Coordinate = player1Seeds[0].position;
     const redSeed2Coordinate = player1Seeds[1].position;
@@ -240,16 +271,6 @@ function Gameboard() {
     const yellowSeed2Coordinate = player1Seeds[5].position;
     const yellowSeed3Coordinate = player1Seeds[6].position;
     const yellowSeed4Coordinate = player1Seeds[7].position;
-
-    const blueSeed1Coordinate = player2Seeds[0].position;
-    const blueSeed2Coordinate = player2Seeds[1].position;
-    const blueSeed3Coordinate = player2Seeds[2].position;
-    const blueSeed4Coordinate = player2Seeds[3].position;
-
-    const greenSeed1Coordinate = player2Seeds[4].position;
-    const greenSeed2Coordinate = player2Seeds[5].position;
-    const greenSeed3Coordinate = player2Seeds[6].position;
-    const greenSeed4Coordinate = player2Seeds[7].position;
 
     if (currentPlayer === "playerOne") {
       if (
@@ -263,22 +284,9 @@ function Gameboard() {
         roadflow.yellowRoad.includes(yellowSeed4Coordinate)
       ) {
         return true;
+      } else {
+        return false;
       }
-    } else if (currentPlayer === "playerTwo") {
-      if (
-        roadflow.blueRoad.includes(blueSeed1Coordinate) ||
-        roadflow.blueRoad.includes(blueSeed2Coordinate) ||
-        roadflow.blueRoad.includes(blueSeed3Coordinate) ||
-        roadflow.blueRoad.includes(blueSeed4Coordinate) ||
-        roadflow.greenRoad.includes(greenSeed1Coordinate) ||
-        roadflow.greenRoad.includes(greenSeed2Coordinate) ||
-        roadflow.greenRoad.includes(greenSeed3Coordinate) ||
-        roadflow.greenRoad.includes(greenSeed4Coordinate)
-      ) {
-        return true;
-      }
-    } else {
-      return false;
     }
   }
 
@@ -384,6 +392,12 @@ function Gameboard() {
           clearPlayerSeeds(player2);
           updatePlayer1Seed(playerOneIndex, false, "won");
           updatePlayer2Seed(playerTwoIndex, false, "home");
+          setTimeout(() => {
+            if (button1Value === 0 && button2Value === 0) {
+              setcurrentPlayer("playerTwo");
+              SetRefree("player 2 turn");
+            }
+          }, 30);
         } else if (currentPlayer === "playerTwo") {
           setwinningSeed(true);
           const playerOneIndex = repeatedElement[i].indexes[0];
@@ -394,6 +408,12 @@ function Gameboard() {
           clearPlayerSeeds(player1);
           updatePlayer1Seed(playerOneIndex, false, "home");
           updatePlayer2Seed(playerTwoIndex, false, "won");
+          setTimeout(() => {
+            if (button1Value === 0 && button2Value === 0) {
+              setcurrentPlayer("playerOne");
+              SetRefree("player 1 turn");
+            }
+          }, 30);
         }
       }
     }
@@ -406,7 +426,7 @@ function Gameboard() {
     }
     setTimeout(() => {
       if (elem !== null) elem.style.opacity = "0";
-    }, 1000);
+    }, 50);
   }
   function getPlayerFromRepeatedArray(index1: number, index2: number) {
     let player: string[] = [];
@@ -476,7 +496,6 @@ function Gameboard() {
   }, [clicked]);
 
   useEffect(() => {
-    countPlayerSeeds();
     countPlayerSeeds();
   }, [player1Seeds, player2Seeds]);
   function updatePlayer1Seed(
@@ -1000,56 +1019,112 @@ function Gameboard() {
     resetButtons();
   };
   useEffect(() => {
-    if (winningSeed === true) {
+    // xdjbjv
+    let NumberOfPlayer1SeedsOnTheRoad = 0;
+    let NumberOfPlayer2SeedsOnTheRoad = 0;
+    for (let i = 0; i <= player1Seeds.length - 1; i++) {
+      if (player1Seeds[i].onroad) {
+        NumberOfPlayer1SeedsOnTheRoad++;
+      }
+      if (player2Seeds[i].onroad) {
+        NumberOfPlayer2SeedsOnTheRoad++;
+      }
+    }
+    // if (currentPlayer === "playerOne" && NumberOfPlayer1SeedsOnTheRoad < 2) {
+
+    // }
+  }, [clicked, player1Seeds, player2Seeds]);
+
+  useEffect(() => {
+    // if (winningSeed === true) {
+    //   setTimeout(() => {
+    //     setwinningSeed(false);
+    //   }, 300);
+    //   return;
+    // }
+    if (currentPlayerHadDoubleSix === true) {
       return;
     }
-    if (currentPlayerHadDoubleSix) {
-      return;
-    }
-    const isValid = isPlayer1Valid();
+    const Player1Valid = isPlayer1Valid();
+    const player2Valid = isPlayer2Valid();
     const validButton = button1Value === 6 || button2Value === 6;
-    if (!isValid && !validButton) {
-      setButton1Value(0);
-      setButton2Value(0);
-      setButton3Value(0);
-      if (currentPlayer === "playerOne") {
+    if (currentPlayer === "playerOne") {
+      if (!Player1Valid && !validButton) {
+        setButton1Value(0);
+        setButton2Value(0);
+        setButton3Value(0);
         setcurrentPlayer("playerTwo");
         SetRefree("Player 2 Turn");
-      } else if (currentPlayer === "playerTwo") {
+      }
+    } else {
+      if (!player2Valid && !validButton) {
+        setButton1Value(0);
+        setButton2Value(0);
+        setButton3Value(0);
         setcurrentPlayer("playerOne");
         SetRefree("Player 1 Turn");
       }
     }
     const combinedButtons = button1Value + button2Value;
-    const playersonTheRoad =
-      player1Seeds[0].onroad ||
-      player1Seeds[1].onroad ||
-      player1Seeds[2].onroad ||
-      player1Seeds[3].onroad ||
-      player1Seeds[4].onroad ||
-      player1Seeds[5].onroad ||
-      player1Seeds[6].onroad ||
-      player1Seeds[7].onroad ||
-      player2Seeds[0].onroad ||
-      player2Seeds[1].onroad ||
-      player2Seeds[2].onroad ||
-      player2Seeds[3].onroad ||
-      player2Seeds[4].onroad ||
-      player2Seeds[5].onroad ||
-      player2Seeds[6].onroad ||
-      player2Seeds[7].onroad;
-    if (playersonTheRoad && combinedButtons === 0) {
-      if (currentPlayer === "playerOne") {
-        setcurrentPlayer("playerTwo");
-        SetRefree("Player 2 Turn");
-      } else if (currentPlayer === "playerTwo") {
-        setcurrentPlayer("playerOne");
-        SetRefree("Player 1 Turn");
-      }
+    // const player1SeedOnTheRoad =
+    //   player1Seeds[0].onroad ||
+    //   player1Seeds[1].onroad ||
+    //   player1Seeds[2].onroad ||
+    //   player1Seeds[3].onroad ||
+    //   player1Seeds[4].onroad ||
+    //   player1Seeds[5].onroad ||
+    //   player1Seeds[6].onroad ||
+    //   player1Seeds[7].onroad;
+    // const player2SeedOnTheRoad =
+    //   player2Seeds[0].onroad ||
+    //   player2Seeds[1].onroad ||
+    //   player2Seeds[2].onroad ||
+    //   player2Seeds[3].onroad ||
+    //   player2Seeds[4].onroad ||
+    //   player2Seeds[5].onroad ||
+    //   player2Seeds[6].onroad ||
+    //   player2Seeds[7].onroad;
+    // const playersonTheRoad =
+    //   player1Seeds[0].onroad ||
+    //   player1Seeds[1].onroad ||
+    //   player1Seeds[2].onroad ||
+    //   player1Seeds[3].onroad ||
+    //   player1Seeds[4].onroad ||
+    //   player1Seeds[5].onroad ||
+    //   player1Seeds[6].onroad ||
+    //   player1Seeds[7].onroad ||
+    //   player2Seeds[0].onroad ||
+    //   player2Seeds[1].onroad ||
+    //   player2Seeds[2].onroad ||
+    //   player2Seeds[3].onroad ||
+    //   player2Seeds[4].onroad ||
+    //   player2Seeds[5].onroad ||
+    //   player2Seeds[6].onroad ||
+    //   player2Seeds[7].onroad;
+    if (
+      currentPlayer === "playerOne" &&
+      combinedButtons === 0
+      // player1SeedOnTheRoad
+    ) {
+      setcurrentPlayer("playerTwo");
+      SetRefree("Player 2 Turn");
+    } else if (
+      currentPlayer === "playerTwo" &&
+      combinedButtons === 0
+      // player2SeedOnTheRoad
+    ) {
+      setcurrentPlayer("playerOne");
+      SetRefree("Player 1 Turn");
     }
-    setTimeout(() => {
-      setwinningSeed(false);
-    }, 300);
+    // if (playersonTheRoad && combinedButtons === 0) {
+    //   if (currentPlayer === "playerOne") {
+    //     setcurrentPlayer("playerTwo");
+    //     SetRefree("Player 2 Turn");
+    //   } else if (currentPlayer === "playerTwo") {
+    //     setcurrentPlayer("playerOne");
+    //     SetRefree("Player 1 Turn");
+    //   }
+    // }
   }, [clicked, player1Seeds, player2Seeds]);
 
   function resetButtons() {
@@ -1720,16 +1795,27 @@ function Gameboard() {
         }
       }
     }, 0);
-    for (let i = 0; i <= roadflow.redRoad.length - 1; i++) {
-      const player2Seed = document.getElementById(roadflow.redRoad[i]);
-      if (player2Seed !== null) {
-        if (player2Seed.style.opacity === "1") {
-          player2Seed.style.opacity = "0";
-          player2Seed.textContent = "";
-        }
-      }
-    }
   }, [player1Seeds, player2Seeds]);
+  const clearGameBoard = () => {
+    const allRoad = roadflow.redRoad;
+    let filledRoads = [];
+    for (let i = 0; i < player1Seeds.length; i++) {
+      filledRoads.push(player1Seeds[i].position);
+      filledRoads.push(player2Seeds[i].position);
+    }
+    const newArr = filterArray(allRoad, filledRoads);
+    for (let i = 0; i <= newArr.length - 1; i++) {
+      let seed = document.getElementById(newArr[i]);
+      if (seed !== null) seed.style.opacity = "0";
+    }
+    console.log(player2Seeds);
+  };
+  useEffect(() => {
+    const id = setInterval(clearGameBoard, 100);
+    return () => {
+      clearInterval(id);
+    };
+  });
 
   return (
     <section className="container">
