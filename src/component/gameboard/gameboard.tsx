@@ -3,6 +3,7 @@ import "./gameboard.css";
 import Dice from "../dice/dice";
 import roadflow from "./roadflow";
 // set CurrentPlayer to next player if there is only 1 seed left that cant move;
+// The turning off of button1 and button2 is buggy, it doesnt go off sometimes
 function Gameboard() {
   function filterArray(arr1: string[], arr2: string[]) {
     const filteredArray = arr1.filter((item) => !arr2.includes(item));
@@ -141,15 +142,15 @@ function Gameboard() {
     },
     {
       id: "red-seed-2",
-      position: "home",
+      position: "r2",
       color: "red",
-      onroad: false,
+      onroad: true,
     },
     {
       id: "red-seed-3",
-      position: "home",
+      position: "r2",
       color: "red",
-      onroad: false,
+      onroad: true,
     },
     {
       id: "red-seed-4",
@@ -182,7 +183,6 @@ function Gameboard() {
       onroad: false,
     },
   ]);
-  console.log(player1Seeds);
   const [player2Seeds, setplayer2Seeds] = useState([
     {
       id: "blue-seed-1",
@@ -233,7 +233,6 @@ function Gameboard() {
       onroad: false,
     },
   ]);
-  console.log(player2Seeds);
   function isPlayer2Valid() {
     let player2SeedPositions = [];
     for (let i = 0; i <= player2Seeds.length - 1; i++) {
@@ -1244,6 +1243,23 @@ function Gameboard() {
     }
     return canSeedEnter;
   }
+  function canSeedAutoEnter(
+    currentSeed: string,
+    roadType: string[],
+    smallestPossibleNumber: number
+  ) {
+    let canSeedEnter = false;
+    const SeedArray = roadType;
+    const roadLength = SeedArray.length - 1;
+    const currentSeedIndex = roadType.indexOf(currentSeed);
+    const potentialFutureValue = currentSeedIndex + smallestPossibleNumber;
+    if (potentialFutureValue > roadLength) {
+      canSeedEnter = false;
+    } else {
+      canSeedEnter = true;
+    }
+    return canSeedEnter;
+  }
   function moveSeed2(e: any) {
     if (currentButton.value === 0) {
       return;
@@ -1831,7 +1847,6 @@ function Gameboard() {
       let seed = document.getElementById(newArr[i]);
       if (seed !== null) seed.style.opacity = "0";
     }
-    console.log(player2Seeds);
   };
   useEffect(() => {
     const id = setInterval(clearGameBoard, 100);
@@ -1879,17 +1894,169 @@ function Gameboard() {
   // }, [button1Value, button2Value]);
 
   // This last useEffect would be to switch the currentPlayer if the player cant make any move, the only dependency should be clicked
+  function getSmallestSeedNumber(seed1: number, seed2: number) {
+    let num = 0;
+    if (seed1 === 0) {
+      num = seed2;
+    } else if (seed2 === 0) {
+      num = seed1;
+    } else if (seed1 < seed2) {
+      num = seed1;
+    } else if (seed2 < seed1) {
+      num = seed2;
+    } else if (seed1 === seed2) {
+      return seed1;
+    }
+    return num;
+  }
+  function PlayerOneSeedHome() {
+    let isPlayer1Home = false;
+    let player = [];
+    for (let i = 0; i <= player1Seeds.length - 1; i++) {
+      if (player1Seeds[i].position === "home") {
+        player.push(true);
+      }
+    }
+    if (player.includes(true)) {
+      isPlayer1Home = true;
+    }
+    return isPlayer1Home;
+  }
+  function playerTwoSeedHome() {
+    let isPlayer2Home = false;
+    let player = [];
+    for (let i = 0; i <= player2Seeds.length - 1; i++) {
+      if (player2Seeds[i].position === "home") {
+        player.push(true);
+      }
+    }
+    if (player.includes(true)) {
+      isPlayer2Home = true;
+    }
+    return isPlayer2Home;
+  }
   useEffect(() => {
-    // Get an array of position of all redseeds, yellowseeds,blueseeds and greenseeds on the road;
-    // if current Player is playerOne;
-    // if redseeds.length !==0
-    // for(let i =0; i <=redseeds.length; i++){
-    //
-    // }
-    // If currentPlayer
-    // you would have to use the home or won strings to check just incase there are no possible seeds outside
-    // if true, check button1 value and but
-  }, [clicked]);
+    let redSeeds = [];
+    let yellowSeeds = [];
+    let blueSeeds = [];
+    let greenSeeds = [];
+    for (let i = 0; i <= player1Seeds.length - 5; i++) {
+      if (
+        player1Seeds[i].position !== "home" &&
+        player1Seeds[i].position !== "won"
+      ) {
+        redSeeds.push(player1Seeds[i].position);
+      }
+      if (
+        player1Seeds[i + 4].position !== "home" &&
+        player1Seeds[i + 4].position !== "won"
+      ) {
+        yellowSeeds.push(player1Seeds[i + 4].position);
+      }
+      if (
+        player2Seeds[i].position !== "home" &&
+        player2Seeds[i].position !== "won"
+      ) {
+        blueSeeds.push(player2Seeds[i].position);
+      }
+      if (
+        player2Seeds[i + 4].position !== "home" &&
+        player2Seeds[i + 4].position !== "won"
+      ) {
+        greenSeeds.push(player2Seeds[i].position);
+      }
+    }
+    let playablePlayer1Seeds = [];
+    let playablePlayer2Seeds = [];
+    const smallestPossibleNumber = getSmallestSeedNumber(
+      button1Value,
+      button2Value
+    );
+    if (currentPlayer === "playerOne") {
+      for (let i = 0; i <= redSeeds.length - 1; i++) {
+        const validMovement = canSeedAutoEnter(
+          redSeeds[i],
+          roadflow.redRoad,
+          smallestPossibleNumber
+        );
+        if (validMovement) {
+          playablePlayer1Seeds.push(true);
+        } else {
+          playablePlayer1Seeds.push(false);
+        }
+      }
+      for (let i = 0; i <= yellowSeeds.length - 1; i++) {
+        const validMovement = canSeedAutoEnter(
+          yellowSeeds[i],
+          roadflow.yellowRoad,
+          smallestPossibleNumber
+        );
+        if (validMovement) {
+          playablePlayer1Seeds.push(true);
+        } else {
+          playablePlayer1Seeds.push(false);
+        }
+      }
+    } else if (currentPlayer === "playerTwo") {
+      for (let i = 0; i <= blueSeeds.length - 1; i++) {
+        const validMovement = canSeedAutoEnter(
+          blueSeeds[i],
+          roadflow.blueRoad,
+          smallestPossibleNumber
+        );
+        if (validMovement) {
+          playablePlayer2Seeds.push(true);
+        } else {
+          playablePlayer2Seeds.push(false);
+        }
+      }
+      for (let i = 0; i <= greenSeeds.length - 1; i++) {
+        const validMovement = canSeedAutoEnter(
+          greenSeeds[i],
+          roadflow.greenRoad,
+          smallestPossibleNumber
+        );
+        if (validMovement) {
+          playablePlayer2Seeds.push(true);
+        } else {
+          playablePlayer2Seeds.push(false);
+        }
+      }
+    }
+    const player1Home = PlayerOneSeedHome();
+    const player2Home = playerTwoSeedHome();
+    const buttonIncludesSix = button1Value === 6 || button2Value === 6;
+    if (
+      currentPlayer === "playerOne" &&
+      !playablePlayer1Seeds.includes(true) &&
+      playablePlayer1Seeds.length > 0
+    ) {
+      if (player1Home && buttonIncludesSix) {
+        return;
+      } else {
+        setcurrentPlayer("playerTwo");
+        SetRefree("player 2 turn");
+        setButton1Value(0);
+        setButton2Value(0);
+        setButton3Value(0);
+      }
+    } else if (
+      currentPlayer === "playerTwo" &&
+      !playablePlayer2Seeds.includes(true) &&
+      playablePlayer2Seeds.length > 0
+    ) {
+      if (player2Home && buttonIncludesSix) {
+        return;
+      } else {
+        setcurrentPlayer("playerOne");
+        SetRefree("player 1 turn");
+        setButton1Value(0);
+        setButton2Value(0);
+        setButton3Value(0);
+      }
+    }
+    // check that you dont have 6 and seeds left for that 6 to even work in the first place
+  }, [clicked, player1Seeds, player2Seeds]);
 
   return (
     <section className="container">
