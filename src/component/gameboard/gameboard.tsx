@@ -235,6 +235,18 @@ function Gameboard() {
   ]);
   console.log(player2Seeds);
   function isPlayer2Valid() {
+    let player2SeedPositions = [];
+    for (let i = 0; i <= player2Seeds.length - 1; i++) {
+      player2SeedPositions.push(player2Seeds[i].position);
+    }
+    const hasHomeOrWon2 = hasNonHomeWonItems(player2SeedPositions);
+    if (hasHomeOrWon2) {
+      return true;
+    } else {
+      return false;
+    }
+
+    // hj,hjb
     const blueSeed1Coordinate = player2Seeds[0].position;
     const blueSeed2Coordinate = player2Seeds[1].position;
     const blueSeed3Coordinate = player2Seeds[2].position;
@@ -262,6 +274,17 @@ function Gameboard() {
     }
   }
   function isPlayer1Valid() {
+    let player1SeedPositions = [];
+    for (let i = 0; i <= player1Seeds.length - 1; i++) {
+      player1SeedPositions.push(player1Seeds[i].position);
+    }
+    const hasHomeOrWon1 = hasNonHomeWonItems(player1SeedPositions);
+    if (hasHomeOrWon1) {
+      return true;
+    } else {
+      return false;
+    }
+    // dkj
     const redSeed1Coordinate = player1Seeds[0].position;
     const redSeed2Coordinate = player1Seeds[1].position;
     const redSeed3Coordinate = player1Seeds[2].position;
@@ -1816,6 +1839,57 @@ function Gameboard() {
       clearInterval(id);
     };
   });
+  function hasNonHomeWonItems(arr: string[]) {
+    for (let item of arr) {
+      if (item !== "home" && item !== "won") {
+        return true;
+      }
+    }
+    return false;
+  }
+  // useEffect(() => {
+  //   let player1SeedPositions = [];
+  //   let player2SeedPositions = [];
+  //   for (let i = 0; i <= player1Seeds.length - 1; i++) {
+  //     player1SeedPositions.push(player1Seeds[i].position);
+  //     player2SeedPositions.push(player2Seeds[i].position);
+  //   }
+  //   const hasHomeOrWon1 = hasNonHomeWonItems(player1SeedPositions);
+  //   const hasHomeOrWon2 = hasNonHomeWonItems(player2SeedPositions);
+  //   let validButtons = button1Value > 0 && button2Value > 0;
+  //   if (
+  //     currentPlayer === "playerOne" &&
+  //     !validButtons &&
+  //     !hasHomeOrWon1 &&
+  //     gameStarted
+  //   ) {
+  //     setcurrentPlayer("playerTwo");
+  //     SetRefree("player 2 turn");
+  //     alert("switched to player2");
+  //   } else if (
+  //     currentPlayer === "playerTwo" &&
+  //     !validButtons &&
+  //     !hasHomeOrWon2 &&
+  //     gameStarted
+  //   ) {
+  //     setcurrentPlayer("playerOne");
+  //     SetRefree("player 1 turn");
+  //     alert("switched to player1");
+  //   }
+  // }, [button1Value, button2Value]);
+
+  // This last useEffect would be to switch the currentPlayer if the player cant make any move, the only dependency should be clicked
+  useEffect(() => {
+    // Get an array of position of all redseeds, yellowseeds,blueseeds and greenseeds on the road;
+    // if current Player is playerOne;
+    // if redseeds.length !==0
+    // for(let i =0; i <=redseeds.length; i++){
+    //
+    // }
+    // If currentPlayer
+    // you would have to use the home or won strings to check just incase there are no possible seeds outside
+    // if true, check button1 value and but
+  }, [clicked]);
 
   return (
     <section className="container">
