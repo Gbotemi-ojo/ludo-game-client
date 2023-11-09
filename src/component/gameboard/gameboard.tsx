@@ -2,8 +2,8 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import "./gameboard.css";
 import Dice from "../dice/dice";
 import roadflow from "./roadflow";
-// set CurrentPlayer to next player if there is only 1 seed left that cant move;
-// The turning off of button1 and button2 is buggy, it doesnt go off sometimes
+// like the useEffect to clear seeds that dont have coordinates, create a useEffect to always fill up the gameboard
+// The bug of having 6 and not having any seeds to bring out;
 function Gameboard() {
   function filterArray(arr1: string[], arr2: string[]) {
     const filteredArray = arr1.filter((item) => !arr2.includes(item));
@@ -142,15 +142,15 @@ function Gameboard() {
     },
     {
       id: "red-seed-2",
-      position: "r2",
+      position: "home",
       color: "red",
-      onroad: true,
+      onroad: false,
     },
     {
       id: "red-seed-3",
-      position: "r2",
+      position: "home",
       color: "red",
-      onroad: true,
+      onroad: false,
     },
     {
       id: "red-seed-4",
@@ -499,6 +499,7 @@ function Gameboard() {
       }
     }
     const validButton = dieValue1.num === 6 || dieValue2.num === 6;
+    console.log(CurrentPlayerSeedOnTheRoad);
     if (CurrentPlayerSeedOnTheRoad.length === 1 && !validButton) {
       return true;
     } else {
@@ -1162,26 +1163,26 @@ function Gameboard() {
     setCurrentButton({ type: "button0", value: 0 });
   }
   const activateButton1 = () => {
-    const buttonAllowed = onlyThirdButtonAllowed();
+    // const buttonAllowed = onlyThirdButtonAllowed();
     if (gameStarted === false) {
       return;
     }
-    if (buttonAllowed) {
-      return;
-    }
+    // if (buttonAllowed) {
+    //   return;
+    // }
     setCurrentButton({
       type: "button1",
       value: button1Value,
     });
   };
   const activateButton2 = () => {
-    const buttonAllowed = onlyThirdButtonAllowed();
-    if (gameStarted === false && buttonAllowed) {
-      return;
-    }
-    if (buttonAllowed) {
-      return;
-    }
+    // const buttonAllowed = onlyThirdButtonAllowed();
+    // if (gameStarted === false && buttonAllowed) {
+    //   return;
+    // }
+    // if (buttonAllowed) {
+    //   return;
+    // }
     setCurrentButton({
       type: "button2",
       value: button2Value,
@@ -1963,7 +1964,7 @@ function Gameboard() {
         player2Seeds[i + 4].position !== "home" &&
         player2Seeds[i + 4].position !== "won"
       ) {
-        greenSeeds.push(player2Seeds[i].position);
+        greenSeeds.push(player2Seeds[i + 4].position);
       }
     }
     let playablePlayer1Seeds = [];
@@ -2026,36 +2027,42 @@ function Gameboard() {
     const player1Home = PlayerOneSeedHome();
     const player2Home = playerTwoSeedHome();
     const buttonIncludesSix = button1Value === 6 || button2Value === 6;
+    console.log("p1");
+    console.log(currentPlayer);
+    console.log(playablePlayer1Seeds);
+    console.log(player1Home);
+    console.log(buttonIncludesSix);
+    console.log(
+      "-------------------------------------------------------------------------------------"
+    );
+    console.log("p2");
+    console.log(currentPlayer);
+    console.log(playablePlayer2Seeds);
+    console.log(player2Home);
+    console.log(buttonIncludesSix);
     if (
       currentPlayer === "playerOne" &&
       !playablePlayer1Seeds.includes(true) &&
-      playablePlayer1Seeds.length > 0
+      playablePlayer1Seeds.length > 0 &&
+      !buttonIncludesSix
     ) {
-      if (player1Home && buttonIncludesSix) {
-        return;
-      } else {
-        setcurrentPlayer("playerTwo");
-        SetRefree("player 2 turn");
-        setButton1Value(0);
-        setButton2Value(0);
-        setButton3Value(0);
-      }
+      setButton1Value(0);
+      setButton2Value(0);
+      setButton3Value(0);
+      setcurrentPlayer("playerTwo");
+      SetRefree("player 2 turn");
     } else if (
       currentPlayer === "playerTwo" &&
       !playablePlayer2Seeds.includes(true) &&
-      playablePlayer2Seeds.length > 0
+      playablePlayer2Seeds.length > 0 &&
+      !buttonIncludesSix
     ) {
-      if (player2Home && buttonIncludesSix) {
-        return;
-      } else {
-        setcurrentPlayer("playerOne");
-        SetRefree("player 1 turn");
-        setButton1Value(0);
-        setButton2Value(0);
-        setButton3Value(0);
-      }
+      setButton1Value(0);
+      setButton2Value(0);
+      setButton3Value(0);
+      setcurrentPlayer("playerOne");
+      SetRefree("player 1 turn");
     }
-    // check that you dont have 6 and seeds left for that 6 to even work in the first place
   }, [clicked, player1Seeds, player2Seeds]);
 
   return (
