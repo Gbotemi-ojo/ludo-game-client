@@ -203,7 +203,6 @@ body {
   text-align: center;
 }
 
-
 .btn-blue:hover {
   background: #333333;
   box-shadow: 0 -2px 0 3px #1a1a1a inset, 0 5px 5px rgba(0, 0, 0, 0.17),
@@ -277,7 +276,7 @@ body {
   width: 33px;
   border-radius: 50%;
   border: 2px solid black;
-  opacity: 0 ;
+  opacity: 0;
   color: white;
   text-align: center;
   vertical-align: middle;
@@ -294,8 +293,8 @@ body {
 .active {
   animation: glow 0.5s infinite alternate;
 }
-.inactive{
-  background-color:  grey;
+.inactive {
+  background-color: grey;
   opacity: 0.5;
   box-shadow: none;
 }
@@ -310,16 +309,24 @@ body {
   }
 }
 /* clean off all seeds */
-.red-box > div{
-  opacity:  0;
-}
-.green-box > div{
+.red-box > div {
   opacity: 0;
 }
-.yellow-box > div{
+.green-box > div {
   opacity: 0;
 }
-.blue-box > div{
+.yellow-box > div {
   opacity: 0;
 }
-
+.blue-box > div {
+  opacity: 0;
+}
+/* computer hand */
+.computerhand {
+  width: 50px;
+  height: 50px;
+  color: green;
+  background-color: grey;
+  position: absolute;
+  top: 0;
+}
