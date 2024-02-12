@@ -1,13 +1,22 @@
-
-const die1 = 6;
-const die2 = 4;
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import "./gameboard.css";
 import Dice from "../dice/dice";
 import roadflow from "./roadflow";
 import playerSeeds from "./playerSeeds";
 
+let gameType = "horizontal";
 function Gameboard() {
+  let p1;
+  let p2;
+  if (gameType === "diagonal") {
+    p1 = [...playerSeeds.redSeeds, ...playerSeeds.yellowSeeds];
+    p2 = [...playerSeeds.blueSeeds, ...playerSeeds.greenSeeds];
+  } else {
+    p1 = [...playerSeeds.redSeeds, ...playerSeeds.blueSeeds];
+    p2 = [...playerSeeds.greenSeeds, ...playerSeeds.yellowSeeds];
+  }
+  let gameSetup = [];
+// The current goal is to remove all "fixed" code to be flexible
   function filterArray(arr1: string[], arr2: string[]) {
     const filteredArray = arr1.filter((item) => !arr2.includes(item));
     return filteredArray;
@@ -32,6 +41,7 @@ function Gameboard() {
     }
     setdieRolling1(true);
     const randomNumber = getRandomNumber();
+    // const randomNumber = playerSeeds.testButtons.button1;
     // const randomNumber = die1;
     setDieValue1({
       num: 6,
@@ -62,6 +72,7 @@ function Gameboard() {
     setdieRolling2(true);
     const randomNumber = getRandomNumber();
     // const randomNumber = die2;
+    // const randomNumber = playerSeeds.testButtons.button2;
     setDieValue2({
       num: 6,
       className: `die_${randomNumber} die rotate-center`,
@@ -135,9 +146,10 @@ function Gameboard() {
     handleDie1();
     handleDie2();
     setcurrentPlayerHadDoubleSix(false);
+    // make the buttons clickable again
   }
-  const [player1Seeds, setplayer1Seeds] = useState(playerSeeds.player1Seeds);
-  const [player2Seeds, setplayer2Seeds] = useState(playerSeeds.player2Seeds);
+  const [player1Seeds, setplayer1Seeds] = useState(p1);
+  const [player2Seeds, setplayer2Seeds] = useState(p2);
   function isPlayer2Valid() {
     let player2SeedPositions = [];
     for (let i = 0; i <= player2Seeds.length - 1; i++) {
@@ -277,6 +289,8 @@ function Gameboard() {
       if (elem !== null) elem.style.opacity = "0";
     }, 50);
   }
+  // function releaseActivateButtons is used to make the activateButtons available when it is locked under special cases
+
   function getPlayerFromRepeatedArray(index1: number, index2: number) {
     let player: string[] = [];
     if (index1 < 8) {
@@ -946,15 +960,19 @@ function Gameboard() {
     setCurrentButton({ type: "button0", value: 0 });
   }
   const activateButton1 = () => {
-    if (gameStarted === false) {
-      return;
-    }
+    const thirdButtonAllowed = onlyThirdButtonAllowed();
+    if (thirdButtonAllowed) return;
+    if (!gameStarted) return;
+
     setCurrentButton({
       type: "button1",
       value: button1Value,
     });
   };
   const activateButton2 = () => {
+    const thirdButtonAllowed = onlyThirdButtonAllowed();
+    if (thirdButtonAllowed) return;
+    if (!gameStarted) return;
     setCurrentButton({
       type: "button2",
       value: button2Value,
@@ -1495,6 +1513,7 @@ function Gameboard() {
     }
     resetButtons();
   }
+  // This handles display of the seeds
   useLayoutEffect(() => {
     setTimeout(() => {
       // player1 home
@@ -1773,24 +1792,11 @@ function Gameboard() {
     const player1Home = PlayerOneSeedHome();
     const player2Home = playerTwoSeedHome();
     const buttonIncludesSix = button1Value === 6 || button2Value === 6;
-    console.log("p1");
-    console.log(currentPlayer);
-    console.log(playablePlayer1Seeds);
-    console.log(player1Home);
-    console.log(buttonIncludesSix);
-    console.log(
-      "-------------------------------------------------------------------------------------"
-    );
-    console.log("p2");
-    console.log(currentPlayer);
-    console.log(playablePlayer2Seeds);
-    console.log(player2Home);
-    console.log(buttonIncludesSix);
     if (
       currentPlayer === "playerOne" &&
       !playablePlayer1Seeds.includes(true) &&
-      playablePlayer1Seeds.length > 0 
-      && buttonIncludesSix
+      playablePlayer1Seeds.length > 0 &&
+      buttonIncludesSix
     ) {
       if (player1Home && buttonIncludesSix) return;
       setButton1Value(0);
@@ -1801,8 +1807,8 @@ function Gameboard() {
     } else if (
       currentPlayer === "playerTwo" &&
       !playablePlayer2Seeds.includes(true) &&
-      playablePlayer2Seeds.length > 0 
-      && buttonIncludesSix 
+      playablePlayer2Seeds.length > 0 &&
+      buttonIncludesSix
     ) {
       if (player2Home && buttonIncludesSix) return;
       setButton1Value(0);
@@ -1813,8 +1819,86 @@ function Gameboard() {
     }
   }, [clicked, player1Seeds, player2Seeds]);
 
+  function seedGlow() {
+    const player1HomeSeeds = [
+      "red-seed-1",
+      "red-seed-2",
+      "red-seed-3",
+      "red-seed-4",
+      "yellow-seed-1",
+      "yellow-seed-2",
+      "yellow-seed-3",
+      "yellow-seed-4",
+    ];
+    const player2HomeSeeds = [
+      "blue-seed-1",
+      "blue-seed-2",
+      "blue-seed-3",
+      "blue-seed-4",
+      "green-seed-1",
+      "green-seed-2",
+      "green-seed-3",
+      "green-seed-4",
+    ];
+    // remove the glows from all seeds firstly
+    for (let i = 0; i <= player1Seeds.length - 1; i++) {
+      let player1RoadSeeds = document.getElementById(player1Seeds[i].position);
+      let player2RoadSeeds = document.getElementById(player2Seeds[i].position);
+      let player1Home = document.getElementById(player1HomeSeeds[i]);
+      let player2Home = document.getElementById(player2HomeSeeds[i]);
+      if (player1RoadSeeds) player1RoadSeeds.classList.remove("active");
+      if (player2RoadSeeds) player2RoadSeeds.classList.remove("active");
+      if (player1Home) player1Home.classList.remove("active");
+      if (player2Home) player2Home.classList.remove("active");
+    }
+    const buttonsix =
+      currentButton.type === "button1" || currentButton.type === "button2";
+    if (currentPlayer === "playerOne") {
+      if (buttonsix && currentButton.value === 6) {
+        for (let i = 0; i <= player1Seeds.length - 1; i++) {
+          const seedOnRoad = document.getElementById(player1Seeds[i].position);
+          const seedAtHome = document.getElementById(player1HomeSeeds[i]);
+          if (seedOnRoad) {
+            seedOnRoad.classList.add("active");
+          }
+          if (seedAtHome) {
+            seedAtHome.classList.add("active");
+          }
+        }
+      } else if (currentButton.value > 0) {
+        for (let i = 0; i <= player1Seeds.length - 1; i++) {
+          const divElement = document.getElementById(player1Seeds[i].position);
+          if (divElement) {
+            divElement.classList.add("active");
+          }
+        }
+      }
+    } else if (currentPlayer === "playerTwo") {
+      if (buttonsix && currentButton.value === 6) {
+        for (let i = 0; i <= player2Seeds.length - 1; i++) {
+          const seedOnRoad = document.getElementById(player2Seeds[i].position);
+          const seedAtHome = document.getElementById(player2HomeSeeds[i]);
+          if (seedOnRoad) {
+            seedOnRoad.classList.add("active");
+          }
+          if (seedAtHome) {
+            seedAtHome.classList.add("active");
+          }
+        }
+      } else if (currentButton.value > 0) {
+        for (let i = 0; i <= player2Seeds.length - 1; i++) {
+          const divElement = document.getElementById(player2Seeds[i].position);
+          if (divElement) {
+            divElement.classList.add("active");
+          }
+        }
+      }
+    }
+  }
+  useEffect(() => {
+    seedGlow();
+  }, [currentButton.type, currentButton.value, clicked]);
 
-  
   return (
     <section className="container">
       <h1>{refree}</h1>
@@ -1834,7 +1918,7 @@ function Gameboard() {
                     id={item}
                     onClick={moveSeed2}
                     ref={moveSeedRef}
-                    className="yellow"
+                    // className={glowPlayer1Seed ? "active" : "inactive"}
                   ></div>
                 </div>
               );
@@ -1852,7 +1936,12 @@ function Gameboard() {
             {greenRoadMap.map((item) => {
               return (
                 <div>
-                  <div id={item} onClick={moveSeed2} ref={moveSeedRef}></div>
+                  <div
+                    id={item}
+                    onClick={moveSeed2}
+                    ref={moveSeedRef}
+                    // className={glowPlayer2Seed ? "active" : ""}
+                  ></div>
                 </div>
               );
             })}
@@ -1873,7 +1962,12 @@ function Gameboard() {
             {blueRoadMap.map((item) => {
               return (
                 <div>
-                  <div id={item} onClick={moveSeed2} ref={moveSeedRef}></div>
+                  <div
+                    id={item}
+                    onClick={moveSeed2}
+                    ref={moveSeedRef}
+                    // className={glowPlayer2Seed ? "active" : ""}
+                  ></div>
                 </div>
               );
             })}
@@ -1890,7 +1984,12 @@ function Gameboard() {
             {redRoadMap.map((item) => {
               return (
                 <div>
-                  <div id={item} onClick={moveSeed2} ref={moveSeedRef} />
+                  <div
+                    id={item}
+                    onClick={moveSeed2}
+                    ref={moveSeedRef}
+                    // className={glowPlayer1Seed ? "active" : ""}
+                  />
                 </div>
               );
             })}
