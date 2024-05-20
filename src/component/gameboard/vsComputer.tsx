@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import "./gameboard.css";
-// import Dice from "../dice/dice";
-import NewDice from "../dice/newDice";
+import Dice from "../dice/dice";
 import roadflow from "./roadflow";
 import playerSeeds from "./playerSeeds";
 
@@ -23,145 +22,7 @@ function Gameboard() {
     className: "die_1 die",
   });
   const [dieRolling1, setdieRolling1] = useState(false);
-  const [transform1, setTransform1] = useState<string>("");
-  const [transform2, setTransform2] = useState<string>("");
 
-  const rollDice1 = (id: string) => {
-    if (dieRolling1) {
-      return;
-    }
-    setdieRolling1(true);
-    const newValue = Math.floor(Math.random() * 6) + 1;
-    let xRotation = 0;
-    let yRotation = 0;
-
-    switch (newValue) {
-      case 1:
-        xRotation = 0;
-        yRotation = 0;
-        break;
-      case 2:
-        xRotation = 0;
-        yRotation = 180;
-        break;
-      case 3:
-        xRotation = 0;
-        yRotation = -90;
-        break;
-      case 4:
-        xRotation = 0;
-        yRotation = 90;
-        break;
-      case 5:
-        xRotation = -90;
-        yRotation = 0;
-        break;
-      case 6:
-        xRotation = 90;
-        yRotation = 0;
-        break;
-    }
-    console.log(`Dice ${id} rolled: ${newValue}`);
-    setDieValue1({
-      num: newValue,
-      className: "hello",
-    });
-    const maxRadius =
-      Math.min(window.innerWidth, window.innerHeight) * 0.5 - 50;
-
-    const randomAngle = Math.random() * 2 * Math.PI;
-    const randomDistance = Math.random() * maxRadius;
-    const randomX = randomDistance * Math.cos(randomAngle);
-    const randomY = randomDistance * Math.sin(randomAngle);
-    const randomZ = Math.random() * 200 - 100;
-
-    const newTransform = `translate(${randomX}px, ${randomY}px) rotateX(${
-      xRotation + 720
-    }deg) rotateY(${yRotation + 720}deg) translateZ(${randomZ}px)`;
-
-    setTransform1("");
-    requestAnimationFrame(() => {
-      setTransform1(newTransform);
-    });
-
-    setTimeout(() => {
-      setTransform1(
-        `translate(0, 0) rotateX(${xRotation}deg) rotateY(${yRotation}deg) translateZ(0)`
-      );
-      setdieRolling1(false);
-      setButton1Value(newValue);
-      const randomUUID = crypto.randomUUID();
-      setClicked(randomUUID);
-    }, 1000);
-  };
-
-  const rollDice2 = (id: string) => {
-    if (dieRolling2) {
-      return;
-    }
-    setdieRolling2(true);
-    const newValue = Math.floor(Math.random() * 6) + 1;
-    let xRotation = 0;
-    let yRotation = 0;
-
-    switch (newValue) {
-      case 1:
-        xRotation = 0;
-        yRotation = 0;
-        break;
-      case 2:
-        xRotation = 0;
-        yRotation = 180;
-        break;
-      case 3:
-        xRotation = 0;
-        yRotation = -90;
-        break;
-      case 4:
-        xRotation = 0;
-        yRotation = 90;
-        break;
-      case 5:
-        xRotation = -90;
-        yRotation = 0;
-        break;
-      case 6:
-        xRotation = 90;
-        yRotation = 0;
-        break;
-    }
-
-    console.log(`Dice ${id} rolled: ${newValue}`);
-    setDieValue2({ num: newValue, className: "" });
-
-    const maxRadius =
-      Math.min(window.innerWidth, window.innerHeight) * 0.5 - 50;
-
-    const randomAngle = Math.random() * 2 * Math.PI;
-    const randomDistance = Math.random() * maxRadius;
-    const randomX = randomDistance * Math.cos(randomAngle);
-    const randomY = randomDistance * Math.sin(randomAngle);
-    const randomZ = Math.random() * 200 - 100;
-
-    const newTransform = `translate(${randomX}px, ${randomY}px) rotateX(${
-      xRotation + 720
-    }deg) rotateY(${yRotation + 720}deg) translateZ(${randomZ}px)`;
-
-    setTransform2("");
-    requestAnimationFrame(() => {
-      setTransform2(newTransform);
-    });
-
-    setTimeout(() => {
-      setTransform2(
-        `translate(0, 0) rotateX(${xRotation}deg) rotateY(${yRotation}deg) translateZ(0)`
-      );
-      setdieRolling2(false);
-      setButton2Value(newValue);
-      const randomUUID = crypto.randomUUID();
-      setClicked(randomUUID);
-    }, 1000);
-  };
   const handleDie1 = (): void => {
     if (dieRolling1) {
       return;
@@ -263,21 +124,16 @@ function Gameboard() {
     type: "button0",
     value: 0,
   });
-  const [player1AtSafeZone, setplayer1AtSafeZone] = useState(false);
-  const [player2AtSafeZone, setplayer2AtSafeZone] = useState(false);
+
   // function to click both die at the same time;
   function handleDice(): void {
     setGameStarted(true);
     if (gameStarted && button3Value > 0) {
       return;
     }
-    // handleDie1();
-    // handleDie2();
-    rollDice1("dice1");
-    rollDice2("dice2");
+    handleDie1();
+    handleDie2();
     setcurrentPlayerHadDoubleSix(false);
-    setplayer1AtSafeZone(false);
-    setplayer2AtSafeZone(false);
     // make the buttons clickable again
   }
   const [player1Seeds, setplayer1Seeds] = useState(playerSeeds.player1Seeds);
@@ -455,62 +311,6 @@ function Gameboard() {
     }
     return PlayerTwoSeedOnTheRoad.length;
   }
-  // This useEffect is to make sure button1 and button2 are locked when the player is in the safezones.
-  useEffect(() => {
-    // player 2 below
-    const greenSafeZones: string[] = ["g7", "g8", "g9", "g10", "g11", "g12"];
-    const blueSafeZones: string[] = ["b12", "b11", "b10", "b9", "b8", "b7"];
-    // player 1 below
-    const yellowSafeZones: string[] = ["y2", "y5", "y8", "y11", "y14", "y17"];
-    const redSafeZones: string[] = ["r17", "r14", "r11", "r8", "r5", "r2"];
-    if (currentPlayer === "playerOne") {
-      for (let i = 0; i <= player1Seeds.length - 5; i++) {
-        // red first
-        for (let j = 0; j <= redSafeZones.length - 1; j++) {
-          if (player1Seeds[i].position === redSafeZones[j]) {
-            setplayer1AtSafeZone(true);
-            setActivateButtonsClassName({
-              button1: "btn-red",
-              button2: "btn-blue",
-              button3: "btn-green",
-            });
-          }
-          // yellow
-          if (player1Seeds[i + 4].position === yellowSafeZones[j]) {
-            setplayer1AtSafeZone(true);
-            setActivateButtonsClassName({
-              button1: "btn-red",
-              button2: "btn-blue",
-              button3: "btn-green",
-            });
-          }
-        }
-      }
-    } else if (currentPlayer === "playerTwo") {
-      for (let i = 0; i <= player2Seeds.length - 5; i++) {
-        // blue first
-        for (let j = 0; j <= blueSafeZones.length - 1; j++) {
-          if (player2Seeds[i].position === blueSafeZones[j]) {
-            setplayer2AtSafeZone(true);
-            setActivateButtonsClassName({
-              button1: "btn-red",
-              button2: "btn-blue",
-              button3: "btn-green",
-            });
-          }
-          // green
-          if (player1Seeds[i + 4].position === greenSafeZones[j]) {
-            setplayer2AtSafeZone(true);
-            setActivateButtonsClassName({
-              button1: "btn-red",
-              button2: "btn-blue",
-              button3: "btn-green",
-            });
-          }
-        }
-      }
-    }
-  }, [player1Seeds, player2Seeds, clicked]);
 
   const onlyThirdButtonAllowed = () => {
     let CurrentPlayerSeedOnTheRoad = [];
@@ -529,19 +329,13 @@ function Gameboard() {
     }
     const validButton = dieValue1.num === 6 || dieValue2.num === 6;
     console.log(CurrentPlayerSeedOnTheRoad);
-    if (
-      CurrentPlayerSeedOnTheRoad.length === 1 &&
-      !validButton &&
-      !player1AtSafeZone &&
-      !player2AtSafeZone
-    ) {
+    if (CurrentPlayerSeedOnTheRoad.length === 1 && !validButton) {
       return true;
     } else {
       return false;
     }
   };
   // The useEffect here is to style the activating buttons if onlyThirdButtonAllowed is true
-
   useEffect(() => {
     const buttonAllowed = onlyThirdButtonAllowed();
     if (buttonAllowed) {
@@ -2116,7 +1910,86 @@ function Gameboard() {
   useEffect(() => {
     seedGlow();
   }, [currentButton.type, currentButton.value, clicked]);
+  function containsOtherThanHomeAndWon(arr: string[]) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] !== "home" && arr[i] !== "won") {
+        return true; // Found something other than 'home' and 'won'
+      }
+    }
+    return false; // Only 'home' and 'won' found
+  }
+  function containsHome(arr: string[]) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] == "home") {
+        return true; // Found home
+      }
+    }
+    return false; // found other things other than home
+  }
+  function computerMove() {
+    if (currentPlayer === "playerTwo") {
+      handleDice();
+    }
+    let player1SeedPositions: string[] = [];
+    let player2SeedPositions: string[] = [];
+    for (let i = 0; i <= player1Seeds.length - 1; i++) {
+      player1SeedPositions.push(player1Seeds[i].position);
+      player2SeedPositions.push(player2Seeds[i].position);
+    }
+    let Player1SeedsOnTheRoad = []; //alpha
+    let player2SeedsOnTheRoad = []; //beta
+    for (let i = 0; i <= player1SeedPositions.length - 1; i++) {
+      if (
+        player1SeedPositions[i] !== "home" ||
+        player1SeedPositions[i] !== "won"
+      ) {
+        Player1SeedsOnTheRoad.push(player1SeedPositions[i]);
+      }
+      if (
+        player2SeedPositions[i] !== "home" ||
+        player2SeedPositions[i] !== "won"
+      ) {
+        player2SeedsOnTheRoad.push(player2SeedPositions[i]);
+      }
+    }
+    const isplayer1SeedOnTheRoad =
+      containsOtherThanHomeAndWon(player1SeedPositions);
+    const isplayer2SeedOnTheRoad =
+      containsOtherThanHomeAndWon(player2SeedPositions);
+    const Player_2_Validbtn = dieValue1.num === 6 || dieValue2.num === 6;
+    const blueSeedAvailable = isBlueSeedAvailable();
+    const greenSeedAvailable = isGreenSeedAvailable();
+    // four scenerios
+    // scenerio 1
+    if (isplayer1SeedOnTheRoad && !isplayer2SeedOnTheRoad) {
+      const blueSeedRoad = roadflow.blueRoad;
+      const greenSeedRoad = roadflow.greenRoad;
+      
 
+    } else if (!isplayer1SeedOnTheRoad && !isplayer2SeedOnTheRoad) {
+    } else if (!isplayer1SeedOnTheRoad && isplayer2SeedOnTheRoad) {
+    } else if (isplayer1SeedOnTheRoad && isplayer2SeedOnTheRoad) {
+    }
+  }
+  function isBlueSeedAvailable() {
+    const blueSeeds = player2Seeds.slice(0, 4);
+    // const greenSeeds = player2Seeds.slice(4, 8);
+    let blueSeedPositions = [];
+    for (let i = 0; i <= blueSeeds.length - 1; i++) {
+      blueSeedPositions.push(blueSeeds[i].position);
+    }
+    const blueSeedAvailable = containsHome(blueSeedPositions);
+    return blueSeedAvailable;
+  }
+  function isGreenSeedAvailable() {
+    const greenSeeds = player2Seeds.slice(4, 8);
+    let greenSeedPositions = [];
+    for (let i = 0; i <= greenSeeds.length - 1; i++) {
+      greenSeedPositions.push(greenSeeds[i].position);
+    }
+    const greenSeedAvailable = containsHome(greenSeedPositions);
+    return greenSeedAvailable;
+  }
   return (
     <section className="container">
       <h1>{refree}</h1>
@@ -2165,7 +2038,7 @@ function Gameboard() {
             })}
           </div>
           <div className="road dice-container">
-            {/* <Dice
+            <Dice
               dieValue={dieValue1.num}
               className={dieValue1.className}
               handleDie={handleDice}
@@ -2174,19 +2047,7 @@ function Gameboard() {
               dieValue={dieValue2.num}
               className={dieValue2.className}
               handleDie={handleDice}
-            /> */}
-            <div className="scene">
-              <NewDice
-                id="dice1"
-                rollDice={handleDice}
-                style={{ transform: transform1 }}
-              />
-              <NewDice
-                id="dice2"
-                rollDice={handleDice}
-                style={{ transform: transform2 }}
-              />
-            </div>
+            />
           </div>
           <div className="road-btw-box horizontal-road blue-road">
             {blueRoadMap.map((item) => {

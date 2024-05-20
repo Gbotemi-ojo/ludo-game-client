@@ -1,0 +1,17 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    overflow: hidden; /* Ensure the dice don't scroll the page */
+}
+
+.scene {
+    width: 200px; /* Adjusted to fit both dice */
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    perspective: 1000px;
+}

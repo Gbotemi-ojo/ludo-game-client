@@ -10,10 +10,10 @@
 // let player1 on the road = true || false;
 // let player 2 on the road = true || false;
 // 4 different scenerios
-// a.player1 on the road player2 not on the road
-// b.player1 not on the road player2 not on the road
-// c.player1 not on the road player2 on the road
-// d.player1 on the road player2 on the road
+// a.player1 on the road ,player2 not on the road
+// b.player1 not on the road ,player2 not on the road
+// c.player1 not on the road ,player2 on the road
+// d.player1 on the road ,player2 on the road
 // 1 -0
 // 0-0
 // 0-1
@@ -41,69 +41,62 @@ import roadflow from "./roadflow";
 // else the strategy should be to stay at the back of player1 before it comes out
 
 // scenerio d
-let computerSeedsPositions = [
-  {
-    id: "blue-seed-2",
-    position: "r7",
-    color: "red",
-    onroad: true,
-  },
-  {
-    id: "blue-seed-3",
-    position: "b7",
-    color: "red",
-    onroad: true,
-  },
-  {
-    id: "green-seed-3",
-    position: "b2",
-    color: "green",
-    onroad: true,
-  },
+
+// if currentplayer === player2 && validButton
+// check if computer can win player1Seed, if it can, always go for the win
+// else comeout
+// if coming out is not an option,strategy should be to stay at the back of player1 homebox
+// if theres a computerseed that has gone past its first player1homebox, the next
+// N:B
+
+// This would be considered as positive checkpoints
+// !!! there are 4 checkpoints
+// The first checkpoint would be to kill the playerseed
+// The second chechpoint would be to stay at the back of a playerseed (if theres one) but avoid hotspot areas(The would be 2 in total)
+// The third checkpoint would be to stay at the back of a playerhome
+// The fourth checkpoint would be to stay in your safe zone
+
+// There are negative checkpoints that player2Seed needs to avoid
+// The first is moving in front of player1 seed
+// The second is coming out behind player1 home box
+
+// gameplay example
+
+let alphabets = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
 ];
-let playerSeedsPositions = [
-  {
-    id: "red-seed-3",
-    position: "y6",
-    color: "red",
-    onroad: true,
-  },
-  {
-    id: "yellow-seed-3",
-    position: "g4",
-    color: "green",
-    onroad: true,
-  },
-];
-const buttons = [3,4,7]
-for (let i = 0; i <= computerSeedsPositions.length - 1; i++) {
-    for (let j = 0; j <= playerSeedsPositions.length - 1; j++) {
-        if (computerSeedsPositions[i].id[0] === 'b') {
-            const seedIndex = roadflow.blueRoad.indexOf(computerSeedsPositions[i].position);
-            if (roadflow.blueRoad[seedIndex + buttons[0]] === playerSeedsPositions[j].position) {
-                // move computerSeed by buttons[0]
-            }
-            else if (roadflow.blueRoad[seedIndex + buttons[1]] === playerSeedsPositions[j].position) {
-                // move computerSeed by buttons[1]
-            }
-            else if (roadflow.blueRoad[seedIndex + buttons[2]] === playerSeedsPositions[j].position) {
-                // move computerSeed by buttons[2]
-            }
-        }
-  }
-}
+let alpha = ['D','K','W'];
+let beta = ['A', 'Q'];
 
-// ex:
-// if currentPlayer === 'playertwo'
-// check the required number needed to kill player2 seeds
-// get index of computerseeds[i] and index of player1SeedPositions[i];
-
-// button1, button2, button3
-// check 'r','y','b','g'
-// if 'r' check roadMap.redRoad
-//
-
-// for the computerHand
-// a div or image or svg that is currently in a certain position
-
-
+// consider these two javascript arrays, create a function that checks alpha array elements
+//  and compare it with beta array elements. The goal of the function is to try to increase just one element in beta to either
+// match an element in alpha or make it come before an element in alpha.
+// scenerio one
+let num1 = 4;
+let num2 = 6;
+// The function should then change beta[0] to  indexOf alphabet[beta[0] + num1] because that would change it from ['A','Q'] to ['D','Q']

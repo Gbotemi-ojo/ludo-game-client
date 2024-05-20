@@ -927,10 +927,10 @@ let player2Seeds = [
     id: "green-seed-4",
     position: "home",
     color: "green",
-    onroad: false,
+    onroad:false,
   },
 ];
 
 const testButtons = { button1: 6, button2: 4 };
 
-export default { redSeeds,yellowSeeds,greenSeeds,blueSeeds };
+export default { player1Seeds,player2Seeds };
